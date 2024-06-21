@@ -50,4 +50,6 @@ before(() => {
       }
     );
   });
+  // Give the `Cypress.env()` writes some time to settle.
+  cy.wait(1000);
 });
