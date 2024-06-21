@@ -1,30 +1,40 @@
 /// <reference types="cypress" />
 
-import {
-  BASE_URL,
-  HTTP_STATUS,
-  STATUS_MESSAGES,
-} from "../../support/constants";
+import { login } from "../../support/login";
+import { getParameter } from "../../support/parameter-store-reader";
+import { HTTP_REQUESTS } from "../../support/requests";
+import { USERS } from "../../support/users";
+import { verifyMissingBearerTokenAuthHeader } from "../../support/verify";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   beforeEach(() => {});
 
-  it("doesn't include an authorization header", () => {
-    cy.request({
-      method: "GET",
-      url: `${BASE_URL}/all`,
-      failOnStatusCode: false,
-    }).then((response) => {
-      cy.log(JSON.stringify(response.body));
-      expect(response.status).to.eq(HTTP_STATUS.UNAUTHORIZED);
-      expect(response.body).to.have.property(
-        "status",
-        "MISSING_AUTHORIZATION_HEADER"
-      );
-      expect(response.body).to.have.property(
-        "message",
-        STATUS_MESSAGES.MISSING_BEARER_TOKEN_AUTH_HEADER
-      );
-    });
+  it("doesn't have an authorization header", () => {
+    cy.request(HTTP_REQUESTS.GET_ALL_USERS_NO_AUTH_HEADER).then((response) =>
+      verifyMissingBearerTokenAuthHeader(response)
+    );
+  });
+
+  it("has the wrong kind of authorization header", () => {
+    cy.request(HTTP_REQUESTS.GET_ALL_USERS_WRONG_KIND_OF_AUTH_HEADER).then(
+      (response) => verifyMissingBearerTokenAuthHeader(response)
+    );
+  });
+
+  it("has an invalid JWT token", () => {
+    cy.log("global.adminUsername = " + global.adminUsername);
+    // Promise.all([USERS.ADMIN.username, USERS.ADMIN.password]).then(
+    //   ([username, password]) => {
+    //     login(username, password).then((jwtToken) => {
+    //       cy.log("jwtToken = " + jwtToken);
+    //       const invalidJwtToken = jwtToken.substring(1);
+    //       HTTP_REQUESTS.GET_ALL_USERS_INVALID_JWT_TOKEN.headers.Authorization =
+    //         "Bearer " + invalidJwtToken;
+    //       cy.request(HTTP_REQUESTS.GET_ALL_USERS_INVALID_JWT_TOKEN).then(
+    //         (response) => verifyInvalidJwtToken(response)
+    //       );
+    //     });
+    //   }
+    // );
   });
 });

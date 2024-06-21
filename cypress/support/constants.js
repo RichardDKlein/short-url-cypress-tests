@@ -1,4 +1,4 @@
-// cypress/support/constants.js
+/// <reference types="cypress" />
 
 export const BASE_URL = "https://test.richarddklein.com/shorturl/users";
 
