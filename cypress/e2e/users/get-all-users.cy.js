@@ -1,9 +1,6 @@
 /// <reference types="cypress" />
 
-import { login } from "../../support/login";
-import { getParameter } from "../../support/parameter-store-reader";
 import { HTTP_REQUESTS } from "../../support/requests";
-import { USERS } from "../../support/users";
 import { verifyMissingBearerTokenAuthHeader } from "../../support/verify";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {

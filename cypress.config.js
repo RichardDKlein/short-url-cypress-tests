@@ -6,42 +6,54 @@ module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       on("task", {
-        loadAwsConfig(configFilePath) {
-          console.log(`Loading AWS config file from: ${configFilePath}`);
+        // Define a task to load the AWS config from the specified path.
+        loadAwsConfig(awsConfigFilePath) {
+          console.log(`Loading AWS config file from: ${awsConfigFilePath}`);
           try {
-            const configFileContent = fs.readFileSync(configFilePath, "utf-8");
-            const config = ini.parse(configFileContent);
-            return config;
+            const awsConfigFileContent = fs.readFileSync(
+              awsConfigFilePath,
+              "utf-8"
+            );
+            const awsConfig = ini.parse(awsConfigFileContent);
+            return awsConfig;
           } catch (error) {
             console.error(
-              `Error loading AWS config file from ${configFilePath}:`,
+              `Error loading AWS config file from ${awsConfigFilePath}:`,
               error
             );
             throw error;
           }
         },
-        loadAwsCredentials(credentialsFilePath) {
+
+        // Define a task to load the AWS credentials from the specifie path.
+        loadAwsCredentials(awsCredentialsFilePath) {
           console.log(
-            `Loading AWS credentials file from: ${credentialsFilePath}`
+            `Loading AWS credentials file from: ${awsCredentialsFilePath}`
           );
           try {
-            const credentialsFileContent = fs.readFileSync(
-              credentialsFilePath,
+            const awsCredentialsFileContent = fs.readFileSync(
+              awsCredentialsFilePath,
               "utf-8"
             );
-            const credentials = ini.parse(credentialsFileContent);
-            return credentials;
+            const awsCredentials = ini.parse(awsCredentialsFileContent);
+            return awsCredentials;
           } catch (error) {
             console.error(
-              `Error loading AWS credentials file from ${credentialsFilePath}:`,
+              `Error loading AWS credentials file from ${awsCredentialsFilePath}:`,
               error
             );
             throw error;
           }
         },
       });
+
+      // Set the HOME environment variable.
+      config.env.HOME = process.env.HOME;
+
       return config;
     },
+    // The Cypress commands contained in the following file
+    // will be executed first.
     supportFile: "cypress/support/index.js",
   },
 });
