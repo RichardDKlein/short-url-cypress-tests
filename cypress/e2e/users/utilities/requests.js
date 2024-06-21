@@ -24,7 +24,7 @@ export const USER_HTTP_REQUESTS = {
     },
     failOnStatusCode: false,
   },
-  LOGIN_HAPPY_PATH: {
+  LOGIN: {
     method: "POST",
     url: `${USERS_BASE_URL}/login`,
     body: { username: "<username>", password: "<password>" },

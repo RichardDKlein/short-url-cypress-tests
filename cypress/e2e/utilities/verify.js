@@ -8,8 +8,8 @@ export function verifyMissingBearerTokenAuthHeader(response) {
   );
 }
 
-export function verifyInvalidJwtToken(response) {
+export function verifyInvalidJwtException(response) {
   expect(JSON.stringify(response.body)).to.eq(
-    JSON.stringify(SECURITY_HTTP_RESPONSES.INVALID_JWT_TOKEN)
+    JSON.stringify(SECURITY_HTTP_RESPONSES.INVALID_JWT_EXCEPTION)
   );
 }

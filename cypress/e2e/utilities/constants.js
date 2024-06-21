@@ -9,6 +9,7 @@ export const HTTP_STATUS_CODES = {
 };
 
 export const SECURITY_ERROR_MESSAGES = {
+  MALFORMED_HEADER: "Malformed protected header JSON",
   MISSING_BEARER_TOKEN_AUTH_HEADER:
     "The request does not contain a Bearer Token authorization header",
 };
