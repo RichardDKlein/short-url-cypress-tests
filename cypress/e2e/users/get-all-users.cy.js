@@ -1,19 +1,19 @@
 /// <reference types="cypress" />
 
-import { HTTP_REQUESTS } from "../../support/requests";
-import { verifyMissingBearerTokenAuthHeader } from "../../support/verify";
+import { USER_HTTP_REQUESTS } from "./utilities/requests";
+import { verifyMissingBearerTokenAuthHeader } from "../utilities/verify";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   beforeEach(() => {});
 
   it("doesn't have an authorization header", () => {
-    cy.request(HTTP_REQUESTS.GET_ALL_USERS_NO_AUTH_HEADER).then((response) =>
-      verifyMissingBearerTokenAuthHeader(response)
+    cy.request(USER_HTTP_REQUESTS.GET_ALL_USERS_NO_AUTH_HEADER).then(
+      (response) => verifyMissingBearerTokenAuthHeader(response)
     );
   });
 
   it("has the wrong kind of authorization header", () => {
-    cy.request(HTTP_REQUESTS.GET_ALL_USERS_WRONG_KIND_OF_AUTH_HEADER).then(
+    cy.request(USER_HTTP_REQUESTS.GET_ALL_USERS_WRONG_KIND_OF_AUTH_HEADER).then(
       (response) => verifyMissingBearerTokenAuthHeader(response)
     );
   });

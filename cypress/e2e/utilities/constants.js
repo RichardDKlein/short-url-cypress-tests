@@ -1,14 +1,14 @@
 /// <reference types="cypress" />
 
-export const BASE_URL = "https://test.richarddklein.com/shorturl/users";
+export const USERS_BASE_URL = "https://test.richarddklein.com/shorturl/users";
 
-export const HTTP_STATUS = {
+export const HTTP_STATUS_CODES = {
   INTERNAL_SERVER_ERROR: 500,
   OK: 200,
   UNAUTHORIZED: 401,
 };
 
-export const STATUS_MESSAGES = {
+export const SECURITY_ERROR_MESSAGES = {
   MISSING_BEARER_TOKEN_AUTH_HEADER:
     "The request does not contain a Bearer Token authorization header",
 };

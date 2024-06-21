@@ -1,16 +1,16 @@
 /// <reference types="cypress" />
 
-import { BASE_URL } from "./constants";
+import { USERS_BASE_URL } from "../../utilities/constants";
 
-export const HTTP_REQUESTS = {
+export const USER_HTTP_REQUESTS = {
   GET_ALL_USERS_NO_AUTH_HEADER: {
     method: "GET",
-    url: `${BASE_URL}/all`,
+    url: `${USERS_BASE_URL}/all`,
     failOnStatusCode: false,
   },
   GET_ALL_USERS_WRONG_KIND_OF_AUTH_HEADER: {
     method: "GET",
-    url: `${BASE_URL}/all`,
+    url: `${USERS_BASE_URL}/all`,
     headers: {
       Authorization: "Basic " + btoa("username:password"),
     },
@@ -18,7 +18,7 @@ export const HTTP_REQUESTS = {
   },
   GET_ALL_USERS_INVALID_JWT_TOKEN: {
     method: "GET",
-    url: `${BASE_URL}/all`,
+    url: `${USERS_BASE_URL}/all`,
     headers: {
       Authorization: "Bearer <jwtToken>",
     },
@@ -26,7 +26,7 @@ export const HTTP_REQUESTS = {
   },
   LOGIN_HAPPY_PATH: {
     method: "POST",
-    url: `${BASE_URL}/login`,
+    url: `${USERS_BASE_URL}/login`,
     body: { username: "<username>", password: "<password>" },
     failOnStatusCode: false,
   },

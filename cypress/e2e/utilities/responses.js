@@ -1,0 +1,11 @@
+/// <reference types="cypress" />
+
+import { SECURITY_ERROR_MESSAGES } from "./constants";
+
+export const SECURITY_HTTP_RESPONSES = {
+  MISSING_BEARER_TOKEN_AUTH_HEADER: {
+    status: "MISSING_AUTHORIZATION_HEADER",
+    message: SECURITY_ERROR_MESSAGES.MISSING_BEARER_TOKEN_AUTH_HEADER,
+  },
+  INVALID_JWT_TOKEN: {},
+};

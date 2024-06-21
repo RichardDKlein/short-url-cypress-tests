@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
 
-import { HTTP_REQUESTS } from "./requests";
+import { USER_HTTP_REQUESTS } from "./requests";
 
 export function login(username, password) {
   cy.log("username = " + username + ", password = " + password);
-  var loginAdmin = HTTP_REQUESTS.LOGIN_HAPPY_PATH;
+  var loginAdmin = USER_HTTP_REQUESTS.LOGIN_HAPPY_PATH;
   loginAdmin.body = {
     username: username,
     password: password,
