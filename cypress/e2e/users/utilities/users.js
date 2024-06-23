@@ -5,4 +5,12 @@ export const USERS = {
     username: "johndoe",
     password: "johndoepassword",
   },
+  JOE_BLOW: {
+    username: "joeblow",
+    password: "joeblowpassword",
+  },
+  JANE_SMITH: {
+    username: "janesmith",
+    password: "janesmithpassword",
+  },
 };
