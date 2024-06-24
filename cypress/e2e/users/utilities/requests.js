@@ -25,7 +25,7 @@ export function getAllUsersWithWrongKindOfAuthHeader() {
   });
 }
 
-export function getAllUsersWithInvalidJwtToken(invalidJwtToken) {
+export function getAllUsersWithJwtToken(invalidJwtToken) {
   return cy.request({
     method: "GET",
     url: `${USERS_BASE_URL}/all`,
@@ -36,13 +36,21 @@ export function getAllUsersWithInvalidJwtToken(invalidJwtToken) {
   });
 }
 
-export function getAllUsersWithValidJwtToken(validJwtToken) {
+// --------------------------------------------------------------------
+// SIGNUP
+// --------------------------------------------------------------------
+
+export function signupAllUsers() {
+  Object.entries(USERS).forEach(([key, value]) => {
+    signupUser(value);
+  });
+}
+
+export function signupUser(user) {
   return cy.request({
-    method: "GET",
-    url: `${USERS_BASE_URL}/all`,
-    headers: {
-      Authorization: "Bearer " + validJwtToken,
-    },
+    method: "POST",
+    url: `${USERS_BASE_URL}/signup`,
+    body: user,
     failOnStatusCode: false,
   });
 }
@@ -74,14 +82,10 @@ export function loginWithValidUserCredentials(username, password) {
 export function deleteAllUsers() {
   loginAsAdmin().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    getAllUsersWithValidJwtToken(adminJwtToken).then((response) => {
+    getAllUsersWithJwtToken(adminJwtToken).then((response) => {
       response.body.shortUrlUsers.forEach((user) => {
         if (user.role == "USER") {
-          deleteUserWithValidJwtToken(user.username, adminJwtToken).then(
-            (response) => {
-              console.log(JSON.stringify(response.body));
-            }
-          );
+          deleteUserWithValidJwtToken(user.username, adminJwtToken);
         }
       });
     });

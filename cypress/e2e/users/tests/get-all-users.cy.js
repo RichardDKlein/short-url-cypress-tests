@@ -2,16 +2,20 @@
 
 import {
   deleteAllUsers,
-  getAllUsersWithInvalidJwtToken,
+  getAllUsersWithJwtToken,
   getAllUsersWithNoAuthHeader,
   getAllUsersWithWrongKindOfAuthHeader,
   loginAsAdmin,
+  loginWithValidUserCredentials,
+  signupUser,
 } from "../utilities/requests";
+import { expectMustBeAdminResponse } from "../utilities/responses";
 import {
   expectInvalidJwtHeaderResponse,
   expectMissingBearerTokenAuthHeaderResponse,
   mangleJwtToken,
 } from "../../common/security";
+import { USERS } from "../utilities/users";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   beforeEach(() => {
@@ -33,37 +37,23 @@ describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   it("has an invalid JWT token", () => {
     loginAsAdmin().then((response) => {
       const invalidJwtToken = mangleJwtToken(response.body.jwtToken);
-      getAllUsersWithInvalidJwtToken(invalidJwtToken).then((response) => {
+      getAllUsersWithJwtToken(invalidJwtToken).then((response) => {
         expectInvalidJwtHeaderResponse(response);
       });
     });
   });
 
-  // it("is logged in as a user who is not an admin", () => {
-  //   Object.entries(USERS).forEach(([key, value]) => {
-  //     console.log(key, value);
-  //     cy.request({
-  //       method: "POST",
-  //       url: `${USERS_BASE_URL}/signup`,
-  //       body: value,
-  //       failOnStatusCode: false,
-  //     }).then((response) => {
-  //       console.log(response.body);
-  //     });
-  //   });
-  //   console.log("Console log: Finished with `.forEach() loop`");
-  //   Object.entries(USERS).forEach(([key, value]) => {
-  //     console.log(key, value);
-  //     console.log("key = " + key);
-  //     console.log("value = " + value);
-  //     cy.request({
-  //       method: "POST",
-  //       url: `${USERS_BASE_URL}/signup`,
-  //       body: value,
-  //       failOnStatusCode: false,
-  //     }).then((response) => {
-  //       console.log(response.body);
-  //     });
-  //   });
-  // });
+  it("has a JWT token for a non-admin user", () => {
+    signupUser(USERS.JOE_BLOW).then((response) => {
+      loginWithValidUserCredentials(
+        USERS.JOE_BLOW.username,
+        USERS.JOE_BLOW.password
+      ).then((response) => {
+        const nonAdminJwtToken = response.body.jwtToken;
+        getAllUsersWithJwtToken(nonAdminJwtToken).then((response) => {
+          expectMustBeAdminResponse(response);
+        });
+      });
+    });
+  });
 });
