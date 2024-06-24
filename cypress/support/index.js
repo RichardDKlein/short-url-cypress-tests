@@ -9,14 +9,11 @@ before(() => {
   cy.task("loadAwsConfig", awsConfigFilePath).then((awsConfig) => {
     const region = awsConfig.default.region;
     Cypress.env("region", region);
-    console.log("region = " + region);
 
     // Fetch the AWS credentials from the AWS credentials file.
     const awsCredentialsFilePath = `${Cypress.env("HOME")}/.aws/credentials`;
     cy.task("loadAwsCredentials", awsCredentialsFilePath).then(
       (awsCredentials) => {
-        console.log("awsCredentials = " + JSON.stringify(awsCredentials));
-
         // Create an AWS SSM client.
         const ssmClient = new SSMClient({
           region,
@@ -34,7 +31,6 @@ before(() => {
         ssmClient.send(command).then((response) => {
           const adminUsername = response.Parameter.Value;
           Cypress.env("adminUsername", adminUsername);
-          console.log("adminUsername = " + adminUsername);
 
           // Fetch the admin password from the Parameter Store.
           const command = new GetParameterCommand({
@@ -44,7 +40,6 @@ before(() => {
           ssmClient.send(command).then((response) => {
             const adminPassword = response.Parameter.Value;
             Cypress.env("adminPassword", adminPassword);
-            console.log("adminPassword = " + adminPassword);
           });
         });
       }

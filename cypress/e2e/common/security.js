@@ -11,7 +11,7 @@ export const SECURITY_RESPONSES = {
   },
 };
 
-export function verifyInvalidJwtException(response) {
+export function expectInvalidJwtHeaderResponse(response) {
   expect(JSON.stringify(response.body)).to.eq(
     JSON.stringify(SECURITY_RESPONSES.INVALID_JWT_EXCEPTION)
   );
@@ -21,4 +21,8 @@ export function expectMissingBearerTokenAuthHeaderResponse(response) {
   expect(JSON.stringify(response.body)).to.eq(
     JSON.stringify(SECURITY_RESPONSES.MISSING_BEARER_TOKEN_AUTH_HEADER)
   );
+}
+
+export function mangleJwtToken(jwtToken) {
+  return jwtToken.substring(1);
 }
