@@ -1,21 +1,21 @@
 /// <reference types="cypress" />
 
+import { deleteAllUsers } from "../delete-user/requests";
 import {
-  deleteAllUsers,
   getAllUsersWithJwtToken,
   getAllUsersWithNoAuthHeader,
   getAllUsersWithWrongKindOfAuthHeader,
-  loginAsAdmin,
-  loginWithValidUserCredentials,
-  signupUser,
-} from "../utilities/requests";
-import { expectMustBeAdminResponse } from "../utilities/responses";
+} from "./requests";
+import { loginAsAdmin, loginWithValidUserCredentials } from "../login/requests";
+import { signupAllUsers, signupUser } from "../signup/requests";
+import { expectMustBeAdminResponse } from "./responses";
 import {
   expectInvalidJwtHeaderResponse,
   expectMissingBearerTokenAuthHeaderResponse,
   mangleJwtToken,
 } from "../../common/security";
-import { USERS } from "../utilities/users";
+import { expectAllUsersSuccessfullyRetrievedResponse } from "./responses";
+import { USERS } from "../users";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   beforeEach(() => {
@@ -52,6 +52,20 @@ describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
         const nonAdminJwtToken = response.body.jwtToken;
         getAllUsersWithJwtToken(nonAdminJwtToken).then((response) => {
           expectMustBeAdminResponse(response);
+        });
+      });
+    });
+  });
+
+  it("has a JWT token for an admin user", () => {
+    signupAllUsers().then((response) => {
+      loginWithValidUserCredentials(
+        Cypress.env("adminUsername"),
+        Cypress.env("adminPassword")
+      ).then((response) => {
+        const adminJwtToken = response.body.jwtToken;
+        getAllUsersWithJwtToken(adminJwtToken).then((response) => {
+          expectAllUsersSuccessfullyRetrievedResponse(response);
         });
       });
     });
