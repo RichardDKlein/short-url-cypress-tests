@@ -1,27 +1,38 @@
 /// <reference types="cypress" />
 
+import { HTTP_STATUS_CODES } from "../../common/constants";
 import { USERS } from "../users";
 
 export const GET_ALL_USERS_RESPONSES = {
   MUST_BE_ADMIN: {
-    status: "MUST_BE_ADMIN",
-    message: "Must be an admin to perform this operation",
+    httpStatus: HTTP_STATUS_CODES.UNAUTHORIZED,
+    response: {
+      status: "MUST_BE_ADMIN",
+      message: "Must be an admin to perform this operation",
+    },
   },
   SUCCESS: {
-    status: "SUCCESS",
-    message: "All users successfully retrieved",
+    httpStatus: HTTP_STATUS_CODES.OK,
+    response: {
+      status: "SUCCESS",
+      message: "All users successfully retrieved",
+    },
   },
 };
 
 export function expectMustBeAdminResponse(response) {
+  expect(response.status).to.eq(
+    GET_ALL_USERS_RESPONSES.MUST_BE_ADMIN.httpStatus
+  );
   expect(JSON.stringify(response.body.status)).to.eq(
-    JSON.stringify(GET_ALL_USERS_RESPONSES.MUST_BE_ADMIN)
+    JSON.stringify(GET_ALL_USERS_RESPONSES.MUST_BE_ADMIN.response)
   );
 }
 
 export function expectAllUsersSuccessfullyRetrievedResponse(response) {
+  expect(response.status).to.eq(GET_ALL_USERS_RESPONSES.SUCCESS.httpStatus);
   expect(JSON.stringify(response.body.status)).to.eq(
-    JSON.stringify(GET_ALL_USERS_RESPONSES.SUCCESS)
+    JSON.stringify(GET_ALL_USERS_RESPONSES.SUCCESS.response)
   );
   const actualUsers = response.body.shortUrlUsers;
   const actualNonAdminUsers = actualUsers.filter(

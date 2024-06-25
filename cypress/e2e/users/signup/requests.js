@@ -10,13 +10,12 @@ export function signupAllUsers() {
 
 function signupUserRecursively(userEntries, index) {
   if (index >= userEntries.length) {
-    return cy.wrap(null); // End of recursion
+    return cy.wrap(null);
   }
-
   const [key, user] = userEntries[index];
   return signupUser(user).then((response) => {
     console.log("signed-up user = " + JSON.stringify(response.body));
-    return signupUserRecursively(userEntries, index + 1); // Recurse to the next user
+    return signupUserRecursively(userEntries, index + 1);
   });
 }
 

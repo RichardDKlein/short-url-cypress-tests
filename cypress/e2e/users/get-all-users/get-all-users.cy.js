@@ -12,8 +12,8 @@ import { expectMustBeAdminResponse } from "./responses";
 import {
   expectInvalidJwtHeaderResponse,
   expectMissingBearerTokenAuthHeaderResponse,
-  mangleJwtToken,
-} from "../../common/security";
+} from "../../common/security/responses";
+import { mangleJwtToken } from "../../common/security/utilities";
 import { expectAllUsersSuccessfullyRetrievedResponse } from "./responses";
 import { USERS } from "../users";
 
