@@ -36,6 +36,10 @@ export function expectAllUsersSuccessfullyRetrievedResponse(response) {
     JSON.stringify(GET_ALL_USERS_RESPONSES.SUCCESS.response)
   );
   const actualUsers = response.body.shortUrlUsers;
+  expectAllUsersSuccessfullyCreated(actualUsers);
+}
+
+export function expectAllUsersSuccessfullyCreated(actualUsers) {
   const actualNonAdminUsers = actualUsers.filter(
     (user) => user.role !== "ADMIN"
   );
@@ -48,12 +52,15 @@ export function expectAllUsersSuccessfullyRetrievedResponse(response) {
     var actualUser = actualUsers.find((user) => {
       return user.username === expectedUser.username;
     });
-    expect(actualUser).to.not.be.undefined;
-    expect(actualUser.username).to.eq(expectedUser.username);
-    expect(actualUser.role).to.eq(expectedUser.role);
-    expect(actualUser.name).to.eq(expectedUser.name);
-    expect(actualUser.email).to.eq(expectedUser.email);
-    expect(actualUser.lastLogin).to.eq("hasn't logged in yet");
-    expect(isTimestampRecent(actualUser.accountCreationDate, 5));
+    expectUserSuccessfullyCreated(actualUser, expectedUser);
   }
+}
+
+export function expectUserSuccessfullyCreated(actualUser, expectedUser) {
+  expect(actualUser.username).to.eq(expectedUser.username);
+  expect(actualUser.role).to.eq(expectedUser.role);
+  expect(actualUser.name).to.eq(expectedUser.name);
+  expect(actualUser.email).to.eq(expectedUser.email);
+  expect(actualUser.lastLogin).to.eq("hasn't logged in yet");
+  expect(isTimestampRecent(actualUser.accountCreationDate, 5));
 }

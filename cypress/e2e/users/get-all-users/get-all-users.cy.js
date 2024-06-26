@@ -58,15 +58,14 @@ describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   });
 
   it("has a JWT token for an admin user", () => {
-    signupAllUsers().then((response) => {
-      loginWithValidUserCredentials(
-        Cypress.env("adminUsername"),
-        Cypress.env("adminPassword")
-      ).then((response) => {
-        const adminJwtToken = response.body.jwtToken;
-        getAllUsersWithJwtToken(adminJwtToken).then((response) => {
-          expectAllUsersSuccessfullyRetrievedResponse(response);
-        });
+    signupAllUsers();
+    loginWithValidUserCredentials(
+      Cypress.env("adminUsername"),
+      Cypress.env("adminPassword")
+    ).then((response) => {
+      const adminJwtToken = response.body.jwtToken;
+      getAllUsersWithJwtToken(adminJwtToken).then((response) => {
+        expectAllUsersSuccessfullyRetrievedResponse(response);
       });
     });
   });
