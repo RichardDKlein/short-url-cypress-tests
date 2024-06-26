@@ -35,6 +35,15 @@ export const SECURITY_RESPONSES = {
   },
 };
 
+export function expectInvalidAdminCredentialsResponse(response) {
+  expect(response.status).to.eq(
+    SECURITY_RESPONSES.INVALID_ADMIN_CREDENTIALS.httpStatus
+  );
+  expect(JSON.stringify(response.body)).to.eq(
+    JSON.stringify(SECURITY_RESPONSES.INVALID_ADMIN_CREDENTIALS.response)
+  );
+}
+
 export function expectInvalidJwtHeaderResponse(response) {
   expect(response.status).to.eq(
     SECURITY_RESPONSES.INVALID_JWT_EXCEPTION.httpStatus

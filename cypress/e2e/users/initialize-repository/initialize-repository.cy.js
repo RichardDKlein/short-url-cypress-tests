@@ -5,7 +5,10 @@ import {
   initializeRepositoryWithWrongKindOfAuthHeader,
   initializeRepositoryWithNoAuthHeader,
 } from "./requests";
-import { expectMissingBasicAuthHeaderResponse } from "../../common/security/responses";
+import {
+  expectMissingBasicAuthHeaderResponse,
+  expectInvalidAdminCredentialsResponse,
+} from "../../common/security/responses";
 import { expectNotOnLocalMachineResponse } from "./responses";
 
 describe("Test the `POST /shorturl/users/dbinit` REST endpoint", () => {

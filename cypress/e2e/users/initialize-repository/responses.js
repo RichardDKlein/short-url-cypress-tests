@@ -18,7 +18,7 @@ export function expectNotOnLocalMachineResponse(response) {
   expect(response.status).to.eq(
     INITIALIZE_REPOSITORY_RESPONSES.NOT_ON_LOCAL_MACHINE.httpStatus
   );
-  expect(JSON.stringify(response.body.status)).to.eq(
+  expect(JSON.stringify(response.body)).to.eq(
     JSON.stringify(
       INITIALIZE_REPOSITORY_RESPONSES.NOT_ON_LOCAL_MACHINE.response
     )
