@@ -25,7 +25,7 @@ export function expectMustBeAdminResponse(response) {
   expect(response.status).to.eq(
     GET_ALL_USERS_RESPONSES.MUST_BE_ADMIN.httpStatus
   );
-  expect(JSON.stringify(response.body.status)).to.eq(
+  expect(JSON.stringify(response.body)).to.eq(
     JSON.stringify(GET_ALL_USERS_RESPONSES.MUST_BE_ADMIN.response)
   );
 }
