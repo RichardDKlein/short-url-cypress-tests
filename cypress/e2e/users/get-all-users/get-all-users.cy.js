@@ -14,7 +14,10 @@ import {
   expectMissingBearerTokenAuthHeaderResponse,
 } from "../../common/security/responses";
 import { mangleJwtToken } from "../../common/security/utilities";
-import { expectAllUsersSuccessfullyRetrievedResponse } from "./responses";
+import {
+  expectAllUsersSuccessfullyRetrievedResponse,
+  expectAllUsersSuccessfullyCreated,
+} from "./responses";
 import { USERS } from "../users";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
@@ -66,6 +69,8 @@ describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
       const adminJwtToken = response.body.jwtToken;
       getAllUsersWithJwtToken(adminJwtToken).then((response) => {
         expectAllUsersSuccessfullyRetrievedResponse(response);
+        const actualUsers = response.body.shortUrlUsers;
+        expectAllUsersSuccessfullyCreated(actualUsers);
       });
     });
   });

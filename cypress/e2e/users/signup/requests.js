@@ -3,6 +3,24 @@
 import { USERS } from "../users";
 import { USERS_BASE_URL } from "../../common/constants";
 
+export function signupWithNoUsername() {
+  return cy.request({
+    method: "POST",
+    url: `${USERS_BASE_URL}/signup`,
+    body: { password: "mypassword" },
+    failOnStatusCode: false,
+  });
+}
+
+export function signupWithNoPassword() {
+  return cy.request({
+    method: "POST",
+    url: `${USERS_BASE_URL}/signup`,
+    body: { username: "newuser" },
+    failOnStatusCode: false,
+  });
+}
+
 export function signupAllUsers() {
   const userEntries = Object.entries(USERS);
   signupUserRecursively(userEntries, 0);

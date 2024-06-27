@@ -35,8 +35,6 @@ export function expectAllUsersSuccessfullyRetrievedResponse(response) {
   expect(JSON.stringify(response.body.status)).to.eq(
     JSON.stringify(GET_ALL_USERS_RESPONSES.SUCCESS.response)
   );
-  const actualUsers = response.body.shortUrlUsers;
-  expectAllUsersSuccessfullyCreated(actualUsers);
 }
 
 export function expectAllUsersSuccessfullyCreated(actualUsers) {
