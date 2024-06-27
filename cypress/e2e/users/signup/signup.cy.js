@@ -25,13 +25,13 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   });
 
   // it("specifies a user who already exists", () => {
-  //   signupWithExistingUser().then((response) => {
+  //   signupExistingUser().then((response) => {
   //     expectUserAlreadyExistsResponse(response);
   //   });
   // });
 
   // it("specifies a new user", () => {
-  //   signupWithExistingUser().then((response) => {
+  //   signupNewUser().then((response) => {
   //     expectUserSuccessfullyCreatedResponse(response);
   //   });
   // });
