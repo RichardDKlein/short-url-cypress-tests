@@ -28,7 +28,7 @@ export function signupAllUsers() {
 
 function signupUserRecursively(userEntries, index) {
   if (index >= userEntries.length) {
-    return;
+    return null;
   }
   const [key, user] = userEntries[index];
   return signupUser(user).then((response) => {
