@@ -40,6 +40,26 @@ before(() => {
           ssmClient.send(command).then((response) => {
             const adminPassword = response.Parameter.Value;
             Cypress.env("adminPassword", adminPassword);
+
+            // Fetch the JWT secret key from the Parameter Store.
+            const command = new GetParameterCommand({
+              Name: "/shortUrl/users/jwtSecretKey",
+              WithDecryption: true,
+            });
+            ssmClient.send(command).then((response) => {
+              const jwtSecretKey = response.Parameter.Value;
+              Cypress.env("jwtSecretKey", jwtSecretKey);
+
+              // Fetch the JWT minutes to live from the Parameter Store.
+              const command = new GetParameterCommand({
+                Name: "/shortUrl/users/jwtMinutesToLive",
+                WithDecryption: true,
+              });
+              ssmClient.send(command).then((response) => {
+                const jwtMinuesToLive = response.Parameter.Value;
+                Cypress.env("jwtMinutesToLive", jwtMinuesToLive);
+              });
+            });
           });
         });
       }

@@ -13,7 +13,7 @@ import {
   expectInvalidJwtHeaderResponse,
   expectMissingBearerTokenAuthHeaderResponse,
 } from "../../common/security/responses";
-import { mangleJwtToken } from "../../common/security/utilities";
+import { mangleJwtToken } from "../../common/security/jwt-utils";
 import {
   expectAllUsersSuccessfullyRetrievedResponse,
   expectAllUsersSuccessfullyCreated,
@@ -26,6 +26,10 @@ describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   });
 
   it("doesn't have an authorization header", () => {
+    cy.task(
+      "log",
+      `====> jwtMinutesToLive = ${Cypress.env("jwtMinutesToLive")}`
+    );
     getAllUsersWithNoAuthHeader().then((response) => {
       expectMissingBearerTokenAuthHeaderResponse(response);
     });

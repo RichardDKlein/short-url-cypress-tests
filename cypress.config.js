@@ -6,6 +6,12 @@ module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       on("task", {
+        // Define a task to log messages to the terminal.
+        log(message) {
+          console.log(message);
+          return null;
+        },
+
         // Define a task to load the AWS config from the specified path.
         loadAwsConfig(awsConfigFilePath) {
           console.log(`Loading AWS config file from: ${awsConfigFilePath}`);
