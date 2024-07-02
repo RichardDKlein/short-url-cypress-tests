@@ -5,13 +5,6 @@ import { isTimestampRecent } from "../../common/miscellaneous/timestamps";
 import { USERS } from "../users";
 
 export const GET_ALL_USERS_RESPONSES = {
-  MUST_BE_ADMIN: {
-    httpStatus: HTTP_STATUS_CODES.UNAUTHORIZED,
-    response: {
-      status: "MUST_BE_ADMIN",
-      message: "Must be an admin to perform this operation",
-    },
-  },
   SUCCESS: {
     httpStatus: HTTP_STATUS_CODES.OK,
     response: {
@@ -20,15 +13,6 @@ export const GET_ALL_USERS_RESPONSES = {
     },
   },
 };
-
-export function expectMustBeAdminResponse(response) {
-  expect(response.status).to.eq(
-    GET_ALL_USERS_RESPONSES.MUST_BE_ADMIN.httpStatus
-  );
-  expect(JSON.stringify(response.body)).to.eq(
-    JSON.stringify(GET_ALL_USERS_RESPONSES.MUST_BE_ADMIN.response)
-  );
-}
 
 export function expectAllUsersSuccessfullyRetrievedResponse(response) {
   expect(response.status).to.eq(GET_ALL_USERS_RESPONSES.SUCCESS.httpStatus);

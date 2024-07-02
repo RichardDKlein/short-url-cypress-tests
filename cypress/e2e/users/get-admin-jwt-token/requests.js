@@ -28,6 +28,10 @@ export function getAdminJwtTokenWithInvalidAdminCredentials() {
   );
 }
 
+export function getAdminJwtToken() {
+  return getAdminJwtTokenWithValidAdminCredentials();
+}
+
 export function getAdminJwtTokenWithValidAdminCredentials() {
   return getAdminJwtTokenWithBasicAuthHeader(
     Cypress.env("adminUsername"),

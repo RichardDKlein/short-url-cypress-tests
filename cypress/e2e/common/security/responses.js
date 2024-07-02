@@ -33,6 +33,13 @@ export const SECURITY_RESPONSES = {
         "The request does not contain a Bearer Token authorization header",
     },
   },
+  MUST_BE_ADMIN: {
+    httpStatus: HTTP_STATUS_CODES.UNAUTHORIZED,
+    response: {
+      status: "MUST_BE_ADMIN",
+      message: "Must be an admin to perform this operation",
+    },
+  },
 };
 
 export function expectInvalidAdminCredentialsResponse(response) {
@@ -72,5 +79,12 @@ export function expectMissingBearerTokenAuthHeaderResponse(response) {
     JSON.stringify(
       SECURITY_RESPONSES.MISSING_BEARER_TOKEN_AUTHORIZATION_HEADER.response
     )
+  );
+}
+
+export function expectMustBeAdminResponse(response) {
+  expect(response.status).to.eq(SECURITY_RESPONSES.MUST_BE_ADMIN.httpStatus);
+  expect(JSON.stringify(response.body)).to.eq(
+    JSON.stringify(SECURITY_RESPONSES.MUST_BE_ADMIN.response)
   );
 }

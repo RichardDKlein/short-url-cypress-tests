@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 
-import { USERS } from "../users";
+import { USERS } from "../../common/constants";
 import { USERS_BASE_URL } from "../../common/constants";
-import { generateJwtToken } from "../../common/security/jwt-utils";
+import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 
 export function signupWithNoUsername() {
   return cy.request({
@@ -24,7 +24,7 @@ export function signupWithNoPassword() {
 
 export function signupAllUsers() {
   const userEntries = Object.entries(USERS);
-  signupUserRecursively(userEntries, 0);
+  return signupUserRecursively(userEntries, 0);
 }
 
 function signupUserRecursively(userEntries, index) {
@@ -39,10 +39,7 @@ function signupUserRecursively(userEntries, index) {
 }
 
 export function signupUserWithValidAdminJwtToken(user) {
-  getAdminJwtTokenWithBasicAuthHeader(
-    Cypress.env("adminUsername"),
-    Cypress.env("adminPassword")
-  ).then((response) => {
+  return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     return cy.request({
       method: "POST",

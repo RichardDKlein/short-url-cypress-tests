@@ -10,6 +10,7 @@ import { deleteAllUsers } from "../delete-all-users/requests";
 import {
   expectInvalidJwtHeaderResponse,
   expectMissingBearerTokenAuthHeaderResponse,
+  expectMustBeAdminResponse,
 } from "../../common/security/responses";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
@@ -37,7 +38,7 @@ describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
 
   it("has a valid but non-admin JWT token", () => {
     getAllUsersWithValidButNonAdminJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectMustBeAdminResponse(response);
     });
   });
 
