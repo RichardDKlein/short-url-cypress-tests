@@ -1,8 +1,7 @@
 /// <reference types="cypress" />
 
-import { HTTP_STATUS_CODES } from "../../common/constants";
+import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
 import { isTimestampRecent } from "../../common/miscellaneous/timestamps";
-import { USERS } from "../users";
 
 export const GET_ALL_USERS_RESPONSES = {
   SUCCESS: {
@@ -19,6 +18,7 @@ export function expectAllUsersSuccessfullyRetrievedResponse(response) {
   expect(JSON.stringify(response.body.status)).to.eq(
     JSON.stringify(GET_ALL_USERS_RESPONSES.SUCCESS.response)
   );
+  expectAllUsersSuccessfullyCreated(response.body.shortUrlUsers);
 }
 
 export function expectAllUsersSuccessfullyCreated(actualUsers) {
