@@ -1,9 +1,10 @@
 /// <reference types="cypress" />
 
 import {
-  getAdminJwtTokenWithBasicAuthHeader,
   getAdminJwtTokenWithNoAuthHeader,
   getAdminJwtTokenWithWrongKindOfAuthHeader,
+  getAdminJwtTokenWithInvalidAdminCredentials,
+  getAdminJwtTokenWithValidAdminCredentials,
 } from "./requests";
 import { expectAdminJwtTokenSuccessfullyGeneratedResponse } from "./responses";
 import {
@@ -27,19 +28,13 @@ describe("Test the `GET /shorturl/users/adminjwt` REST endpoint", () => {
   });
 
   it("has invalid admin credentials", () => {
-    getAdminJwtTokenWithBasicAuthHeader(
-      "invalidAdminUsername",
-      "invalidAdminPassword"
-    ).then((response) => {
+    getAdminJwtTokenWithInvalidAdminCredentials().then((response) => {
       expectInvalidAdminCredentialsResponse(response);
     });
   });
 
   it("has valid admin credentials", () => {
-    getAdminJwtTokenWithBasicAuthHeader(
-      Cypress.env("adminUsername"),
-      Cypress.env("adminPassword")
-    ).then((response) => {
+    getAdminJwtTokenWithValidAdminCredentials().then((response) => {
       expectAdminJwtTokenSuccessfullyGeneratedResponse(response);
     });
   });

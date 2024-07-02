@@ -2,6 +2,7 @@
 
 import { USERS } from "../users";
 import { USERS_BASE_URL } from "../../common/constants";
+import { generateJwtToken } from "../../common/security/jwt-utils";
 
 export function signupWithNoUsername() {
   return cy.request({
@@ -31,17 +32,26 @@ function signupUserRecursively(userEntries, index) {
     return null;
   }
   const [key, user] = userEntries[index];
-  return signupUser(user).then((response) => {
+  return signupUserWithValidAdminJwtToken(user).then((response) => {
     console.log("signed-up user = " + JSON.stringify(response.body));
     signupUserRecursively(userEntries, index + 1);
   });
 }
 
-export function signupUser(user) {
-  return cy.request({
-    method: "POST",
-    url: `${USERS_BASE_URL}/signup`,
-    body: user,
-    failOnStatusCode: false,
+export function signupUserWithValidAdminJwtToken(user) {
+  getAdminJwtTokenWithBasicAuthHeader(
+    Cypress.env("adminUsername"),
+    Cypress.env("adminPassword")
+  ).then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    return cy.request({
+      method: "POST",
+      url: `${USERS_BASE_URL}/signup`,
+      body: user,
+      headers: {
+        Authorization: "Bearer " + adminJwtToken,
+      },
+      failOnStatusCode: false,
+    });
   });
 }

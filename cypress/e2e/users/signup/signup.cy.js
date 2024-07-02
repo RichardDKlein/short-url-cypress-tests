@@ -1,38 +1,44 @@
 /// <reference types="cypress" />
 
-import { deleteAllUsers } from "../delete-user/requests";
-import { signupWithNoUsername, signupWithNoPassword } from "./requests";
-import {
-  expectMissingUsernameResponse,
-  expectMissingPasswordResponse,
-} from "./responses";
+import { deleteAllUsersWithValidAdminJwtToken } from "./requests";
+import { expectAllUsersSuccessfullyDeletedResponse } from "./responses";
 
 describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   beforeEach(() => {
     deleteAllUsers();
   });
 
-  it("is missing a username", () => {
-    signupWithNoUsername().then((response) => {
-      expectMissingUsernameResponse(response);
-    });
-  });
-
-  it("is missing a password", () => {
-    signupWithNoPassword().then((response) => {
-      expectMissingPasswordResponse(response);
-    });
-  });
-
-  // it("specifies a user who already exists", () => {
-  //   signupExistingUser().then((response) => {
-  //     expectUserAlreadyExistsResponse(response);
+  // it("doesn't have an authorization header", () => {
+  //   cy.task(
+  //     "log",
+  //     `====> jwtMinutesToLive = ${Cypress.env("jwtMinutesToLive")}`
+  //   );
+  //   deleteAllUsersWithNoAuthHeader().then((response) => {
+  //     expectMissingBearerTokenAuthHeaderResponse(response);
   //   });
   // });
 
-  // it("specifies a new user", () => {
-  //   signupNewUser().then((response) => {
-  //     expectUserSuccessfullyCreatedResponse(response);
+  // it("has the wrong kind of authorization header", () => {
+  //   deleteAllUsersWithWrongKindOfAuthHeader().then((response) => {
+  //     expectMissingBearerTokenAuthHeaderResponse(response);
   //   });
   // });
+
+  // it("has an invalid JWT token", () => {
+  //   deleteAllUsersWithInvalidJwtToken().then((response) => {
+  //     expectInvalidJwtHeaderResponse(response);
+  //   });
+  // });
+
+  // it("has a valid but non-admin JWT token", () => {
+  //   deleteAllUsersWithValidButNonAdminJwtToken().then((response) => {
+  //     expectInvalidAdminCredentialsResponse(response);
+  //   });
+  // });
+
+  it("has a valid admin JWT token", () => {
+    signupWithValidAdminJwtToken().then((response) => {
+      expectAllUsersSuccessfullyDeletedResponse(response);
+    });
+  });
 });

@@ -21,6 +21,20 @@ export function getAdminJwtTokenWithWrongKindOfAuthHeader() {
   });
 }
 
+export function getAdminJwtTokenWithInvalidAdminCredentials() {
+  return getAdminJwtTokenWithBasicAuthHeader(
+    "invalidUsername",
+    "invalidPassword"
+  );
+}
+
+export function getAdminJwtTokenWithValidAdminCredentials() {
+  return getAdminJwtTokenWithBasicAuthHeader(
+    Cypress.env("adminUsername"),
+    Cypress.env("adminPassword")
+  );
+}
+
 export function getAdminJwtTokenWithBasicAuthHeader(username, password) {
   return cy.request({
     method: "GET",

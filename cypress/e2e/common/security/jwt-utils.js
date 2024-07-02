@@ -1,8 +1,9 @@
 /// <reference types="cypress" />
 
 import { sign, verify } from "jsonwebtoken";
+import { KeyObject } from "crypto";
 
-export function generateToken(username, role) {
+export function generateJwtToken(username, role) {
   const now = new Date();
   const millisecsToLive = Cypress.env("jwtMinutesToLive") * 60 * 1000;
   const expirationDate = new Date(now.getTime() + millisecsToLive);
@@ -18,7 +19,7 @@ export function generateToken(username, role) {
   );
 }
 
-export function extractUsernameAndRoleFromToken(token) {
+export function extractUsernameAndRoleFromJwtToken(token) {
   const payload = verify(token, getKey());
   const username = payload.sub;
   const role = payload.role;
@@ -26,7 +27,11 @@ export function extractUsernameAndRoleFromToken(token) {
 }
 
 export function getKey() {
-  return Buffer.from(Cypress.env("jwtSecretKey"), "base64");
+  // const base64Key = "your_base64_encoded_key_string_here";
+  // const keyBuffer = Buffer.from(base64Key, "base64");
+  // const keyObject = crypto.createSecretKey(keyBuffer);
+  // return keyObject;
+  return KeyObject.from(Cypress.env("jwtSecretKey"));
 }
 
 export function mangleJwtToken(jwtToken) {

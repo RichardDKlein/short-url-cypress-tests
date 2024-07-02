@@ -1,6 +1,10 @@
 /// <reference types="cypress" />
 
-import { USERS_BASE_URL } from "../../common/constants";
+import { USERS, USERS_BASE_URL } from "../../common/constants";
+import {
+  signupAllUsers,
+  signupUserWithValidAdminJwtToken,
+} from "../signup/requests";
 
 export function getAllUsersWithNoAuthHeader() {
   return cy.request({
@@ -21,12 +25,36 @@ export function getAllUsersWithWrongKindOfAuthHeader() {
   });
 }
 
-export function getAllUsersWithJwtToken(invalidJwtToken) {
+export function getAllUsersWithInvalidJwtToken() {
   return cy.request({
     method: "GET",
     url: `${USERS_BASE_URL}/all`,
     headers: {
-      Authorization: "Bearer " + invalidJwtToken,
+      Authorization: "Bearer " + "invalid.jwt.token",
+    },
+    failOnStatusCode: false,
+  });
+}
+
+export function getAllUsersWithInvalidJwtToken() {
+  return cy.request({
+    method: "GET",
+    url: `${USERS_BASE_URL}/all`,
+    headers: {
+      Authorization: "Bearer " + "invalid.jwt.token",
+    },
+    failOnStatusCode: false,
+  });
+}
+
+export function getAllUsersWithValidButNonAdminJwtToken() {
+  signupAllUsers();
+  login;
+  return cy.request({
+    method: "GET",
+    url: `${USERS_BASE_URL}/all`,
+    headers: {
+      Authorization: "Bearer " + "invalid.jwt.token",
     },
     failOnStatusCode: false,
   });

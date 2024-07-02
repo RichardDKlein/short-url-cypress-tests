@@ -24,9 +24,7 @@ export function expectAdminJwtTokenSuccessfullyGeneratedResponse(response) {
   expect(JSON.stringify(response.body.status)).to.eq(
     JSON.stringify(GET_ADMIN_JWT_TOKEN_RESPONSES.SUCCESS.response.status)
   );
-  cy.wrap(GET_ADMIN_JWT_TOKEN_RESPONSES.SUCCESS.response)
-    .its("jwtToken")
-    .should("exist");
-  const jwtToken = GET_ADMIN_JWT_TOKEN_RESPONSES.SUCCESS.response.jwtToken;
+  expect(response.body.jwtToken).to.exist;
+  const jwtToken = response.body.jwtToken;
   cy.wrap(jwtToken.split(".")).should("have.lengthOf", 3);
 }
