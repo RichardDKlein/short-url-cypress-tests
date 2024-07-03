@@ -16,8 +16,6 @@ export const GET_ADMIN_JWT_TOKEN_RESPONSES = {
 };
 
 export function expectAdminJwtTokenSuccessfullyGeneratedResponse(response) {
-  console.log("response.status = " + response.status);
-  console.log("response.body = " + JSON.stringify(response.body));
   expect(response.status).to.eq(
     GET_ADMIN_JWT_TOKEN_RESPONSES.SUCCESS.httpStatus
   );

@@ -13,7 +13,12 @@ import {
   expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security/responses";
-import { expectAllUsersSuccessfullyRetrievedResponse } from "./responses";
+import { expectAllUsersSuccessfullyDeletedResponse } from "../delete-all-users/responses";
+import {
+  expectAllUsersSuccessfullyCreated,
+  expectAllUsersSuccessfullyRetrievedResponse,
+} from "./responses";
+import { signupAllUsers } from "../signup/requests";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   beforeEach(() => {
@@ -39,14 +44,18 @@ describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   });
 
   it("has a valid but non-admin JWT token", () => {
-    getAllUsersWithValidButNonAdminJwtToken().then((response) => {
-      expectMustBeAdminResponse(response);
+    signupAllUsers().then(() => {
+      getAllUsersWithValidButNonAdminJwtToken().then((response) => {
+        expectMustBeAdminResponse(response);
+      });
     });
   });
 
   it("has a valid admin JWT token", () => {
-    getAllUsersWithValidAdminJwtToken().then((response) => {
-      expectAllUsersSuccessfullyRetrievedResponse(response);
+    signupAllUsers().then(() => {
+      getAllUsersWithValidAdminJwtToken().then((response) => {
+        expectAllUsersSuccessfullyRetrievedResponse(response);
+      });
     });
   });
 });

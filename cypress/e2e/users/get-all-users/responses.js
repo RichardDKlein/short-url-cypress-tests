@@ -18,10 +18,11 @@ export function expectAllUsersSuccessfullyRetrievedResponse(response) {
   expect(JSON.stringify(response.body.status)).to.eq(
     JSON.stringify(GET_ALL_USERS_RESPONSES.SUCCESS.response)
   );
-  expectAllUsersSuccessfullyCreated(response.body.shortUrlUsers);
+  expectAllUsersSuccessfullyCreated(response);
 }
 
-export function expectAllUsersSuccessfullyCreated(actualUsers) {
+export function expectAllUsersSuccessfullyCreated(response) {
+  const actualUsers = response.body.shortUrlUsers;
   const actualNonAdminUsers = actualUsers.filter(
     (user) => user.role !== "ADMIN"
   );
@@ -34,11 +35,11 @@ export function expectAllUsersSuccessfullyCreated(actualUsers) {
     var actualUser = actualUsers.find((user) => {
       return user.username === expectedUser.username;
     });
-    expectUserSuccessfullyCreated(actualUser, expectedUser);
+    verifyUserHasExpectedProperties(actualUser, expectedUser);
   }
 }
 
-export function expectUserSuccessfullyCreated(actualUser, expectedUser) {
+export function verifyUserHasExpectedProperties(actualUser, expectedUser) {
   expect(actualUser.username).to.eq(expectedUser.username);
   expect(actualUser.role).to.eq(expectedUser.role);
   expect(actualUser.name).to.eq(expectedUser.name);
