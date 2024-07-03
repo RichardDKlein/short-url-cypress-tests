@@ -37,27 +37,25 @@ export function getAllUsersWithInvalidJwtToken() {
 
 export function getAllUsersWithValidButNonAdminJwtToken() {
   return signupAllUsers().then(() => {
-    return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
-      (response) => {
-        const nonAdminJwtToken = response.body.jwtToken;
-        return cy.request({
-          method: "GET",
-          url: `${USERS_BASE_URL}/all`,
-          headers: {
-            Authorization: `Bearer ${nonAdminJwtToken}`,
-          },
-          failOnStatusCode: false,
-        });
-      }
-    );
+    login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then((response) => {
+      const nonAdminJwtToken = response.body.jwtToken;
+      cy.request({
+        method: "GET",
+        url: `${USERS_BASE_URL}/all`,
+        headers: {
+          Authorization: `Bearer ${nonAdminJwtToken}`,
+        },
+        failOnStatusCode: false,
+      });
+    });
   });
 }
 
 export function getAllUsersWithValidAdminJwtToken() {
   return signupAllUsers().then(() => {
-    return getAdminJwtToken().then((response) => {
+    getAdminJwtToken().then((response) => {
       const adminJwtToken = response.body.jwtToken;
-      return cy.request({
+      cy.request({
         method: "GET",
         url: `${USERS_BASE_URL}/all`,
         headers: {

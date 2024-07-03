@@ -32,8 +32,7 @@ function signupUserRecursively(userEntries, index) {
     return null;
   }
   const [key, user] = userEntries[index];
-  return signupUserWithValidAdminJwtToken(user).then((response) => {
-    console.log("signed-up user = " + JSON.stringify(response.body));
+  return signupUserWithValidAdminJwtToken(user).then(() => {
     signupUserRecursively(userEntries, index + 1);
   });
 }
@@ -41,7 +40,7 @@ function signupUserRecursively(userEntries, index) {
 export function signupUserWithValidAdminJwtToken(user) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    return cy.request({
+    cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/signup`,
       body: user,
@@ -49,6 +48,8 @@ export function signupUserWithValidAdminJwtToken(user) {
         Authorization: "Bearer " + adminJwtToken,
       },
       failOnStatusCode: false,
+    }).then((response) => {
+      console.log("signed-up user = " + JSON.stringify(response.body));
     });
   });
 }

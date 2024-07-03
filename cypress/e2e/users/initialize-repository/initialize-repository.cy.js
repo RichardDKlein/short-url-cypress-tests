@@ -4,6 +4,8 @@ import {
   initializeRepositoryWithBasicAuthHeader,
   initializeRepositoryWithWrongKindOfAuthHeader,
   initializeRepositoryWithNoAuthHeader,
+  initializeRepositoryWithInvalidAdminCredentials,
+  initializeRepositoryWithValidAdminCredentials,
 } from "./requests";
 import {
   expectMissingBasicAuthHeaderResponse,
@@ -27,19 +29,13 @@ describe("Test the `POST /shorturl/users/dbinit` REST endpoint", () => {
   });
 
   it("has invalid admin credentials", () => {
-    initializeRepositoryWithBasicAuthHeader(
-      "invalidAdminUsername",
-      "invalidAdminPassword"
-    ).then((response) => {
+    initializeRepositoryWithInvalidAdminCredentials().then((response) => {
       expectInvalidAdminCredentialsResponse(response);
     });
   });
 
   it("has valid admin credentials", () => {
-    initializeRepositoryWithBasicAuthHeader(
-      Cypress.env("adminUsername"),
-      Cypress.env("adminPassword")
-    ).then((response) => {
+    initializeRepositoryWithValidAdminCredentials().then((response) => {
       expectNotOnLocalMachineResponse(response);
     });
   });

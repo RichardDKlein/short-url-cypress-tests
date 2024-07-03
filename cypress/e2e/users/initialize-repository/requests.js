@@ -21,6 +21,20 @@ export function initializeRepositoryWithWrongKindOfAuthHeader() {
   });
 }
 
+export function initializeRepositoryWithInvalidAdminCredentials() {
+  return initializeRepositoryWithBasicAuthHeader(
+    "invalidAdminUsername",
+    "invalidAdminPassword"
+  );
+}
+
+export function initializeRepositoryWithValidAdminCredentials() {
+  return initializeRepositoryWithBasicAuthHeader(
+    Cypress.env("adminUsername"),
+    Cypress.env("adminPassword")
+  );
+}
+
 export function initializeRepositoryWithBasicAuthHeader(username, password) {
   return cy.request({
     method: "POST",
