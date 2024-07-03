@@ -5,7 +5,11 @@ import {
   signupWithWrongKindOfAuthHeader,
   signupWithInvalidJwtToken,
   signupWithValidButNonAdminJwtToken,
-  signupWithValidAdminJwtToken,
+  signupAllUsers,
+  signupWithMissingUsername,
+  signupWithMissingPassword,
+  signupExistingUser,
+  signupNewUser,
 } from "./requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
 import {
@@ -13,7 +17,12 @@ import {
   expectInvalidJwtHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security/responses";
-import { expectUserSuccessfullyCreatedResponse } from "./responses";
+import {
+  expectMissingUsernameResponse,
+  expectMissingPasswordResponse,
+  expectUserAlreadyExistsResponse,
+  expectUserSuccessfullyCreatedResponse,
+} from "./responses";
 
 describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   beforeEach(() => {
@@ -39,13 +48,33 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   });
 
   it("has a valid but non-admin JWT token", () => {
-    signupWithValidButNonAdminJwtToken().then((response) => {
-      expectMustBeAdminResponse(response);
+    signupAllUsers().then(() => {
+      signupWithValidButNonAdminJwtToken().then((response) => {
+        expectMustBeAdminResponse(response);
+      });
     });
   });
 
-  it("has a valid admin JWT token", () => {
-    signupWithValidAdminJwtToken().then((response) => {
+  it("doesn't specify a username", () => {
+    signupWithMissingUsername().then((response) => {
+      expectMissingUsernameResponse(response);
+    });
+  });
+
+  it("doesn't specify a password", () => {
+    signupWithMissingPassword().then((response) => {
+      expectMissingPasswordResponse(response);
+    });
+  });
+
+  it("attempts to sign up an existing user", () => {
+    signupExistingUser().then((response) => {
+      expectUserAlreadyExistsResponse(response);
+    });
+  });
+
+  it("signs up a new user", () => {
+    signupNewUser().then((response) => {
       expectUserSuccessfullyCreatedResponse(response);
     });
   });

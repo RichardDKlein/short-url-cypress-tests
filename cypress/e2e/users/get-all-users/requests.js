@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 import { USERS, USERS_BASE_URL } from "../../common/constants";
-import { signupAllUsers } from "../signup/requests";
 import { login } from "../login/requests";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 
