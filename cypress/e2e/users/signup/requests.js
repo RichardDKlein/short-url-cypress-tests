@@ -102,41 +102,37 @@ export function signupWithMissingPassword() {
 }
 
 export function signupExistingUser() {
-  return signupAllUsers().then(() => {
-    getAdminJwtToken().then((response) => {
-      const adminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "POST",
-        url: `${USERS_BASE_URL}/signup`,
-        body: {
-          username: USERS.JOE_BLOW.username,
-          password: USERS.JOE_BLOW.password,
-        },
-        headers: {
-          Authorization: `Bearer ${adminJwtToken}`,
-        },
-        failOnStatusCode: false,
-      });
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    cy.request({
+      method: "POST",
+      url: `${USERS_BASE_URL}/signup`,
+      body: {
+        username: USERS.JOE_BLOW.username,
+        password: USERS.JOE_BLOW.password,
+      },
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
+      failOnStatusCode: false,
     });
   });
 }
 
 export function signupNewUser() {
-  return signupAllUsers().then(() => {
-    getAdminJwtToken().then((response) => {
-      const adminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "POST",
-        url: `${USERS_BASE_URL}/signup`,
-        body: {
-          username: "isaac.newton",
-          password: "isaac.newton.password",
-        },
-        headers: {
-          Authorization: `Bearer ${adminJwtToken}`,
-        },
-        failOnStatusCode: false,
-      });
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    cy.request({
+      method: "POST",
+      url: `${USERS_BASE_URL}/signup`,
+      body: {
+        username: "isaac.newton",
+        password: "isaac.newton.password",
+      },
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
+      failOnStatusCode: false,
     });
   });
 }

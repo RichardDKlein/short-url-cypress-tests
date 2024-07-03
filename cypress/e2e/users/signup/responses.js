@@ -3,18 +3,18 @@
 import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
 
 export const SIGNUP_RESPONSES = {
-  MISSING_PASSWORD: {
-    httpStatus: HTTP_STATUS_CODES.BAD_REQUEST,
-    response: {
-      status: "MISSING_PASSWORD",
-      message: "A non-empty password must be specified",
-    },
-  },
   MISSING_USERNAME: {
     httpStatus: HTTP_STATUS_CODES.BAD_REQUEST,
     response: {
       status: "MISSING_USERNAME",
       message: "A non-empty username must be specified",
+    },
+  },
+  MISSING_PASSWORD: {
+    httpStatus: HTTP_STATUS_CODES.BAD_REQUEST,
+    response: {
+      status: "MISSING_PASSWORD",
+      message: "A non-empty password must be specified",
     },
   },
   USER_ALREADY_EXISTS: {

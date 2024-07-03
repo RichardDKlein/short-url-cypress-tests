@@ -1,16 +1,16 @@
 /// <reference types="cypress" />
 
 import {
-  signupWithNoAuthHeader,
-  signupWithWrongKindOfAuthHeader,
-  signupWithInvalidJwtToken,
-  signupWithValidButNonAdminJwtToken,
-  signupAllUsers,
-  signupWithMissingUsername,
-  signupWithMissingPassword,
-  signupExistingUser,
-  signupNewUser,
+  loginWithNoAuthHeader,
+  loginWithWrongKindOfAuthHeader,
+  loginWithInvalidJwtToken,
+  loginWithValidButNonAdminJwtToken,
+  loginWithMissingUsername,
+  loginWithMissingPassword,
+  loginNonExistentUser,
+  loginExistingUser,
 } from "./requests";
+import { signupAllUsers } from "../signup/requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
 import {
   expectMissingBearerTokenAuthHeaderResponse,
@@ -20,65 +20,65 @@ import {
 import {
   expectMissingUsernameResponse,
   expectMissingPasswordResponse,
-  expectUserAlreadyExistsResponse,
-  expectUserSuccessfullyCreatedResponse,
+  expectUserDoesNotExistResponse,
+  expectUserSuccessfullyLoggedInResponse,
 } from "./responses";
 
-describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
+describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
   beforeEach(() => {
     deleteAllUsers();
   });
 
   it("doesn't have an authorization header", () => {
-    signupWithNoAuthHeader().then((response) => {
+    loginWithNoAuthHeader().then((response) => {
       expectMissingBearerTokenAuthHeaderResponse(response);
     });
   });
 
   it("has the wrong kind of authorization header", () => {
-    signupWithWrongKindOfAuthHeader().then((response) => {
+    loginWithWrongKindOfAuthHeader().then((response) => {
       expectMissingBearerTokenAuthHeaderResponse(response);
     });
   });
 
   it("has an invalid JWT token", () => {
-    signupWithInvalidJwtToken().then((response) => {
+    loginWithInvalidJwtToken().then((response) => {
       expectInvalidJwtHeaderResponse(response);
     });
   });
 
   it("has a valid but non-admin JWT token", () => {
     signupAllUsers().then(() => {
-      signupWithValidButNonAdminJwtToken().then((response) => {
+      loginWithValidButNonAdminJwtToken().then((response) => {
         expectMustBeAdminResponse(response);
       });
     });
   });
 
   it("doesn't specify a username", () => {
-    signupWithMissingUsername().then((response) => {
+    loginWithMissingUsername().then((response) => {
       expectMissingUsernameResponse(response);
     });
   });
 
   it("doesn't specify a password", () => {
-    signupWithMissingPassword().then((response) => {
+    loginWithMissingPassword().then((response) => {
       expectMissingPasswordResponse(response);
     });
   });
 
-  it("attempts to sign up an existing user", () => {
+  it("attempts to log in a non-existent user", () => {
     signupAllUsers().then(() => {
-      signupExistingUser().then((response) => {
-        expectUserAlreadyExistsResponse(response);
+      loginNonExistentUser().then((response) => {
+        expectUserDoesNotExistResponse(response);
       });
     });
   });
 
-  it("signs up a new user", () => {
+  it("logs in an existing user", () => {
     signupAllUsers().then(() => {
-      signupNewUser().then((response) => {
-        expectUserSuccessfullyCreatedResponse(response);
+      loginExistingUser().then((response) => {
+        expectUserSuccessfullyLoggedInResponse(response);
       });
     });
   });
