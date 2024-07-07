@@ -26,7 +26,9 @@ import {
 
 describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
   beforeEach(() => {
-    deleteAllUsers();
+    deleteAllUsers().then(() => {
+      signupAllUsers();
+    });
   });
 
   it("doesn't have an authorization header", () => {
@@ -48,10 +50,8 @@ describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
   });
 
   it("has a valid but non-admin JWT token", () => {
-    signupAllUsers().then(() => {
-      loginWithValidButNonAdminJwtToken().then((response) => {
-        expectMustBeAdminResponse(response);
-      });
+    loginWithValidButNonAdminJwtToken().then((response) => {
+      expectMustBeAdminResponse(response);
     });
   });
 
@@ -68,18 +68,16 @@ describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
   });
 
   it("attempts to log in a non-existent user", () => {
-    signupAllUsers().then(() => {
-      loginNonExistentUser().then((response) => {
+    loginNonExistentUser("isaac.newton", "isaac.newton.password").then(
+      (response) => {
         expectUserDoesNotExistResponse(response);
-      });
-    });
+      }
+    );
   });
 
   it("logs in an existing user", () => {
-    signupAllUsers().then(() => {
-      loginExistingUser().then((response) => {
-        expectUserSuccessfullyLoggedInResponse(response);
-      });
+    loginExistingUser().then((response) => {
+      expectUserSuccessfullyLoggedInResponse(response);
     });
   });
 });

@@ -3,6 +3,7 @@
 import { USERS } from "../../common/constants";
 import { USERS_BASE_URL } from "../../common/constants";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
+import { getAllUsers } from "../get-all-users/requests";
 import { login } from "../login/requests";
 
 export function signupWithNoAuthHeader() {
@@ -104,31 +105,43 @@ export function signupWithMissingPassword() {
 export function signupExistingUser() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/signup`,
-      body: {
-        username: USERS.JOE_BLOW.username,
-        password: USERS.JOE_BLOW.password,
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      failOnStatusCode: false,
+    getAllUsers().then((response) => {
+      const actualUsers = response.body.shortUrlUsers;
+      const cannedUsers = Object.entries(USERS);
+      let existingUsername;
+      let existingPassword;
+      actualUsers.forEach((actualUser) => {
+        if (actualUser.role == "ADMIN") {
+          return;
+        }
+        for (var [key, cannedUser] of cannedUsers) {
+          if (actualUser.username == cannedUser.username) {
+            existingUsername = cannedUser.username;
+            existingPassword = cannedUser.password;
+            return;
+          }
+        }
+      });
+      cy.request({
+        method: "POST",
+        url: `${USERS_BASE_URL}/signup`,
+        body: { username: existingUsername, password: existingPassword },
+        headers: {
+          Authorization: `Bearer ${adminJwtToken}`,
+        },
+        failOnStatusCode: false,
+      });
     });
   });
 }
 
-export function signupNewUser() {
+export function signupNewUser(username, password) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/signup`,
-      body: {
-        username: "isaac.newton",
-        password: "isaac.newton.password",
-      },
+      body: { username, password },
       headers: {
         Authorization: `Bearer ${adminJwtToken}`,
       },
@@ -163,8 +176,6 @@ function signupUserWithValidAdminJwtToken(user) {
         Authorization: "Bearer " + adminJwtToken,
       },
       failOnStatusCode: false,
-    }).then((response) => {
-      console.log("signed-up user = " + JSON.stringify(response.body));
     });
   });
 }

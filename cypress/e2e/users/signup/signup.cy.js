@@ -26,7 +26,9 @@ import {
 
 describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   beforeEach(() => {
-    deleteAllUsers();
+    deleteAllUsers().then(() => {
+      signupAllUsers();
+    });
   });
 
   it("doesn't have an authorization header", () => {
@@ -48,10 +50,8 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   });
 
   it("has a valid but non-admin JWT token", () => {
-    signupAllUsers().then(() => {
-      signupWithValidButNonAdminJwtToken().then((response) => {
-        expectMustBeAdminResponse(response);
-      });
+    signupWithValidButNonAdminJwtToken().then((response) => {
+      expectMustBeAdminResponse(response);
     });
   });
 
@@ -68,18 +68,14 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   });
 
   it("attempts to sign up an existing user", () => {
-    signupAllUsers().then(() => {
-      signupExistingUser().then((response) => {
-        expectUserAlreadyExistsResponse(response);
-      });
+    signupExistingUser().then((response) => {
+      expectUserAlreadyExistsResponse(response);
     });
   });
 
   it("signs up a new user", () => {
-    signupAllUsers().then(() => {
-      signupNewUser().then((response) => {
-        expectUserSuccessfullyCreatedResponse(response);
-      });
+    signupNewUser("isaac.newton", "isaac.newton.password").then((response) => {
+      expectUserSuccessfullyCreatedResponse(response);
     });
   });
 });

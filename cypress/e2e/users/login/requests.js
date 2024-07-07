@@ -2,6 +2,7 @@
 
 import { USERS_BASE_URL, USERS } from "../../common/constants";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
+import { getAllUsers } from "../get-all-users/requests";
 
 export function loginWithNoAuthHeader() {
   return cy.request({
@@ -99,12 +100,41 @@ export function loginWithMissingPassword() {
   });
 }
 
-export function loginNonExistentUser() {
-  return login("isaac.newton", "isaac.newton.password");
+export function loginNonExistentUser(username, password) {
+  return login(username, password);
 }
 
 export function loginExistingUser() {
-  return login(USERS.JOE_BLOW.username, USERS.JOE_BLOW.password);
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    getAllUsers().then((response) => {
+      const actualUsers = response.body.shortUrlUsers;
+      const cannedUsers = Object.entries(USERS);
+      let existingUsername;
+      let existingPassword;
+      actualUsers.forEach((actualUser) => {
+        if (actualUser.role == "ADMIN") {
+          return;
+        }
+        for (var [key, cannedUser] of cannedUsers) {
+          if (actualUser.username == cannedUser.username) {
+            existingUsername = cannedUser.username;
+            existingPassword = cannedUser.password;
+            return;
+          }
+        }
+      });
+      cy.request({
+        method: "POST",
+        url: `${USERS_BASE_URL}/login`,
+        body: { username: existingUsername, password: existingPassword },
+        headers: {
+          Authorization: `Bearer ${adminJwtToken}`,
+        },
+        failOnStatusCode: false,
+      });
+    });
+  });
 }
 
 export function login(username, password) {
