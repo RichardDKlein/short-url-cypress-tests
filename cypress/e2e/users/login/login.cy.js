@@ -6,7 +6,11 @@ import {
   loginWithInvalidJwtToken,
   loginWithValidButNonAdminJwtToken,
   loginWithMissingUsername,
+  loginWithEmptyUsername,
+  loginWithBlankUsername,
   loginWithMissingPassword,
+  loginWithEmptyPassword,
+  loginWithBlankPassword,
   loginNonExistentUser,
   loginExistingUser,
 } from "./requests";
@@ -61,8 +65,32 @@ describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
     });
   });
 
+  it("specifies an empty username", () => {
+    loginWithEmptyUsername().then((response) => {
+      expectMissingUsernameResponse(response);
+    });
+  });
+
+  it("specifies a blank username", () => {
+    loginWithBlankUsername().then((response) => {
+      expectMissingUsernameResponse(response);
+    });
+  });
+
   it("doesn't specify a password", () => {
     loginWithMissingPassword().then((response) => {
+      expectMissingPasswordResponse(response);
+    });
+  });
+
+  it("specifies an empty password", () => {
+    loginWithEmptyPassword().then((response) => {
+      expectMissingPasswordResponse(response);
+    });
+  });
+
+  it("specifies a blank password", () => {
+    loginWithBlankPassword().then((response) => {
       expectMissingPasswordResponse(response);
     });
   });
