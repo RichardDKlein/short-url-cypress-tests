@@ -18,11 +18,11 @@ import {
   expectInvalidJwtHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security/responses";
-// import {
-//   expectMissingUsernameResponse,
-//   expectNoSuchUserResponse,
-//   expectUserSuccessfullyDeletedResponse,
-// } from "./responses";
+import {
+  expectMissingUsernameResponse,
+  expectNoSuchUserResponse,
+  expectUserSuccessfullyDeletedResponse,
+} from "./responses";
 
 describe("Test the `DELETE /shorturl/users/specific` REST endpoint", () => {
   beforeEach(() => {
