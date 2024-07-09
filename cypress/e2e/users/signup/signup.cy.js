@@ -7,7 +7,11 @@ import {
   signupWithValidButNonAdminJwtToken,
   signupAllUsers,
   signupWithMissingUsername,
+  signupWithEmptyUsername,
+  signupWithBlankUsername,
   signupWithMissingPassword,
+  signupWithEmptyPassword,
+  signupWithBlankPassword,
   signupExistingUser,
   signupNewUser,
 } from "./requests";
@@ -61,8 +65,32 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
     });
   });
 
+  it("specifies an empty username", () => {
+    signupWithEmptyUsername().then((response) => {
+      expectMissingUsernameResponse(response);
+    });
+  });
+
+  it("specifies a blank username", () => {
+    signupWithBlankUsername().then((response) => {
+      expectMissingUsernameResponse(response);
+    });
+  });
+
   it("doesn't specify a password", () => {
     signupWithMissingPassword().then((response) => {
+      expectMissingPasswordResponse(response);
+    });
+  });
+
+  it("specifies an empty password", () => {
+    signupWithEmptyPassword().then((response) => {
+      expectMissingPasswordResponse(response);
+    });
+  });
+
+  it("specifies a blank password", () => {
+    signupWithBlankPassword().then((response) => {
       expectMissingPasswordResponse(response);
     });
   });

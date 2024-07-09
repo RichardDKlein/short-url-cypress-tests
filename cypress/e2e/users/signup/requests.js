@@ -85,6 +85,42 @@ export function signupWithMissingUsername() {
   });
 }
 
+export function signupWithEmptyUsername() {
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    cy.request({
+      method: "POST",
+      url: `${USERS_BASE_URL}/signup`,
+      body: {
+        username: "",
+        password: "isaac.newton.password",
+      },
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
+      failOnStatusCode: false,
+    });
+  });
+}
+
+export function signupWithBlankUsername() {
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    cy.request({
+      method: "POST",
+      url: `${USERS_BASE_URL}/signup`,
+      body: {
+        username: "   ",
+        password: "isaac.newton.password",
+      },
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
+      failOnStatusCode: false,
+    });
+  });
+}
+
 export function signupWithMissingPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
@@ -93,6 +129,42 @@ export function signupWithMissingPassword() {
       url: `${USERS_BASE_URL}/signup`,
       body: {
         username: "isaac.newton",
+      },
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
+      failOnStatusCode: false,
+    });
+  });
+}
+
+export function signupWithEmptyPassword() {
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    cy.request({
+      method: "POST",
+      url: `${USERS_BASE_URL}/signup`,
+      body: {
+        username: "isaac.newton",
+        password: "",
+      },
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
+      failOnStatusCode: false,
+    });
+  });
+}
+
+export function signupWithBlankPassword() {
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    cy.request({
+      method: "POST",
+      url: `${USERS_BASE_URL}/signup`,
+      body: {
+        username: "isaac.newton",
+        password: "   ",
       },
       headers: {
         Authorization: `Bearer ${adminJwtToken}`,
