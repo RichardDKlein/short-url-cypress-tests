@@ -196,15 +196,7 @@ export function loginExistingUser() {
           }
         }
       });
-      cy.request({
-        method: "POST",
-        url: `${USERS_BASE_URL}/login`,
-        body: { username: existingUsername, password: existingPassword },
-        headers: {
-          Authorization: `Bearer ${adminJwtToken}`,
-        },
-        failOnStatusCode: false,
-      });
+      login(existingUsername, existingPassword);
     });
   });
 }
