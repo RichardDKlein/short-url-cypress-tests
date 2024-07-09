@@ -176,7 +176,6 @@ export function signupWithBlankPassword() {
 
 export function signupExistingUser() {
   return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
     getAllUsers().then((response) => {
       const actualUsers = response.body.shortUrlUsers;
       const cannedUsers = Object.entries(USERS);
@@ -194,20 +193,12 @@ export function signupExistingUser() {
           }
         }
       });
-      cy.request({
-        method: "POST",
-        url: `${USERS_BASE_URL}/signup`,
-        body: { username: existingUsername, password: existingPassword },
-        headers: {
-          Authorization: `Bearer ${adminJwtToken}`,
-        },
-        failOnStatusCode: false,
-      });
+      signupUser(existingUsername, existingPassword);
     });
   });
 }
 
-export function signupNewUser(username, password) {
+export function signupUser(username, password) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     cy.request({

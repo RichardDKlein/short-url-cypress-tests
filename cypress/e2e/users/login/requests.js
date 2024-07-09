@@ -178,7 +178,6 @@ export function loginNonExistentUser(username, password) {
 
 export function loginExistingUser() {
   return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
     getAllUsers().then((response) => {
       const actualUsers = response.body.shortUrlUsers;
       const cannedUsers = Object.entries(USERS);

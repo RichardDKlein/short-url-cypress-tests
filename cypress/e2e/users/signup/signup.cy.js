@@ -13,7 +13,7 @@ import {
   signupWithEmptyPassword,
   signupWithBlankPassword,
   signupExistingUser,
-  signupNewUser,
+  signupUser,
 } from "./requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
 import {
@@ -102,7 +102,7 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   });
 
   it("signs up a new user", () => {
-    signupNewUser("isaac.newton", "isaac.newton.password").then((response) => {
+    signupUser("isaac.newton", "isaac.newton.password").then((response) => {
       expectUserSuccessfullyCreatedResponse(response);
     });
   });
