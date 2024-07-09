@@ -8,7 +8,7 @@ import {
   deleteUserWithMissingUsername,
   deleteUserWithEmptyUsername,
   deleteUserWithBlankUsername,
-  deleteNonExistentUser,
+  deleteUser,
   deleteExistingUser,
 } from "./requests";
 import { signupAllUsers } from "../signup/requests";
@@ -18,11 +18,11 @@ import {
   expectInvalidJwtHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security/responses";
-import {
-  expectMissingUsernameResponse,
-  expectNoSuchUserResponse,
-  expectUserSuccessfullyDeletedResponse,
-} from "./responses";
+// import {
+//   expectMissingUsernameResponse,
+//   expectNoSuchUserResponse,
+//   expectUserSuccessfullyDeletedResponse,
+// } from "./responses";
 
 describe("Test the `DELETE /shorturl/users/specific` REST endpoint", () => {
   beforeEach(() => {
@@ -74,7 +74,7 @@ describe("Test the `DELETE /shorturl/users/specific` REST endpoint", () => {
   });
 
   it("attempts to delete a nonexistent user", () => {
-    deleteNonExistentUser("isaac.newton").then((response) => {
+    deleteUser("isaac.newton").then((response) => {
       expectNoSuchUserResponse(response);
     });
   });

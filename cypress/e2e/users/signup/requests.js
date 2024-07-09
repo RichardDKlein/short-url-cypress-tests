@@ -179,34 +179,32 @@ export function signupExistingUser() {
     getAllUsers().then((response) => {
       const actualUsers = response.body.shortUrlUsers;
       const cannedUsers = Object.entries(USERS);
-      let existingUsername;
-      let existingPassword;
+      let existingUser;
       actualUsers.forEach((actualUser) => {
         if (actualUser.role == "ADMIN") {
           return;
         }
         for (var [key, cannedUser] of cannedUsers) {
           if (actualUser.username == cannedUser.username) {
-            existingUsername = cannedUser.username;
-            existingPassword = cannedUser.password;
+            existingUser = cannedUser;
             return;
           }
         }
       });
-      signupUser(existingUsername, existingPassword);
+      signupUser(existingUser);
     });
   });
 }
 
-export function signupUser(username, password) {
+export function signupUser(user) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/signup`,
-      body: { username, password },
+      body: user,
       headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
+        Authorization: "Bearer " + adminJwtToken,
       },
       failOnStatusCode: false,
     });
@@ -223,22 +221,7 @@ function signupUsersRecursively(userEntries, index) {
     return null;
   }
   const [key, user] = userEntries[index];
-  return signupUserWithValidAdminJwtToken(user).then(() => {
+  return signupUser(user).then(() => {
     signupUsersRecursively(userEntries, index + 1);
-  });
-}
-
-function signupUserWithValidAdminJwtToken(user) {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/signup`,
-      body: user,
-      headers: {
-        Authorization: "Bearer " + adminJwtToken,
-      },
-      failOnStatusCode: false,
-    });
   });
 }

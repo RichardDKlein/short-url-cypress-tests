@@ -102,7 +102,10 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   });
 
   it("signs up a new user", () => {
-    signupUser("isaac.newton", "isaac.newton.password").then((response) => {
+    signupUser({
+      username: "isaac.newton",
+      password: "isaac.newton.password",
+    }).then((response) => {
       expectUserSuccessfullyCreatedResponse(response);
     });
   });
