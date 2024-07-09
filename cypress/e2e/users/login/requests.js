@@ -108,7 +108,7 @@ export function loginWithBlankUsername() {
       method: "POST",
       url: `${USERS_BASE_URL}/login`,
       body: {
-        username: "  ",
+        username: "   ",
         password: "isaac.newton.password",
       },
       headers: {
