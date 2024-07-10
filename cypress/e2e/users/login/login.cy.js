@@ -12,7 +12,7 @@ import {
   loginWithEmptyPassword,
   loginWithBlankPassword,
   loginNonExistentUser,
-  loginExistingUser,
+  loginAnExistingUser,
 } from "./requests";
 import { signupAllUsers } from "../signup/requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
@@ -104,7 +104,7 @@ describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
   });
 
   it("logs in an existing user", () => {
-    loginExistingUser().then((response) => {
+    loginAnExistingUser().then((response) => {
       expectUserSuccessfullyLoggedInResponse(response);
     });
   });

@@ -180,17 +180,17 @@ export function signupExistingUser() {
       const actualUsers = response.body.shortUrlUsers;
       const cannedUsers = Object.entries(USERS);
       let existingUser;
-      actualUsers.forEach((actualUser) => {
+      for (const actualUser of actualUsers) {
         if (actualUser.role == "ADMIN") {
-          return;
+          continue;
         }
         for (var [key, cannedUser] of cannedUsers) {
           if (actualUser.username == cannedUser.username) {
             existingUser = cannedUser;
-            return;
+            break;
           }
         }
-      });
+      }
       signupUser(existingUser);
     });
   });

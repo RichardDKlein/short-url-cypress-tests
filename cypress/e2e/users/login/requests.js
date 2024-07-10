@@ -176,29 +176,29 @@ export function loginNonExistentUser(username, password) {
   return login(username, password);
 }
 
-export function loginExistingUser() {
-  return getAdminJwtToken().then((response) => {
-    getAllUsers().then((response) => {
-      const actualUsers = response.body.shortUrlUsers;
-      const cannedUsers = Object.entries(USERS);
-      let existingUsername;
-      let existingPassword;
-      actualUsers.forEach((actualUser) => {
-        if (actualUser.role == "ADMIN") {
-          return;
+export function loginAnExistingUser() {
+  return getAllUsers().then((response) => {
+    const actualUsers = response.body.shortUrlUsers;
+    const cannedUsers = Object.entries(USERS);
+    let existingUsername;
+    let existingPassword;
+    for (const actualUser of actualUsers) {
+      if (actualUser.role == "ADMIN") {
+        continue;
+      }
+      for (var [key, cannedUser] of cannedUsers) {
+        if (actualUser.username == cannedUser.username) {
+          existingUsername = cannedUser.username;
+          existingPassword = cannedUser.password;
+          break;
         }
-        for (var [key, cannedUser] of cannedUsers) {
-          if (actualUser.username == cannedUser.username) {
-            existingUsername = cannedUser.username;
-            existingPassword = cannedUser.password;
-            return;
-          }
-        }
-      });
-      login(existingUsername, existingPassword);
-    });
+      }
+    }
+    login(existingUsername, existingPassword);
   });
 }
+
+export function loginShortUrlUser(user) {}
 
 export function login(username, password) {
   return getAdminJwtToken().then((response) => {

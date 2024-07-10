@@ -119,18 +119,17 @@ export function deleteExistingUser() {
       const actualUsers = response.body.shortUrlUsers;
       const cannedUsers = Object.entries(USERS);
       let existingUsername;
-      let existingPassword;
-      actualUsers.forEach((actualUser) => {
+      for (const actualUser of actualUsers) {
         if (actualUser.role == "ADMIN") {
-          return;
+          continue;
         }
         for (var [key, cannedUser] of cannedUsers) {
           if (actualUser.username == cannedUser.username) {
             existingUsername = cannedUser.username;
-            return;
+            break;
           }
         }
-      });
+      }
       deleteUser(existingUsername);
     });
   });
