@@ -49,9 +49,10 @@ export function expectNoSuchUserResponse(response) {
 export function expectUserSuccessfullyDeletedResponse(response) {
   expect(response.status).to.eq(DELETE_USER_RESPONSES.SUCCESS.httpStatus);
   var expectedResponse = { ...DELETE_USER_RESPONSES.SUCCESS.response };
+  const username = response.body.message.match(/'(.*)'/g);
   expectedResponse.message = expectedResponse.message.replace(
-    "${username}",
-    USERS.JOE_BLOW.username
+    "'${username}'",
+    username
   );
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }

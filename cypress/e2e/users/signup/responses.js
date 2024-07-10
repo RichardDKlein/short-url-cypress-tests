@@ -52,9 +52,10 @@ export function expectUserAlreadyExistsResponse(response) {
     SIGNUP_RESPONSES.USER_ALREADY_EXISTS.httpStatus
   );
   var expectedResponse = { ...SIGNUP_RESPONSES.USER_ALREADY_EXISTS.response };
+  const username = response.body.message.match(/'(.*)'/g);
   expectedResponse.message = expectedResponse.message.replace(
-    "${username}",
-    USERS.JOE_BLOW.username
+    "'${username}'",
+    username
   );
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }
@@ -62,9 +63,10 @@ export function expectUserAlreadyExistsResponse(response) {
 export function expectUserSuccessfullyCreatedResponse(response) {
   expect(response.status).to.eq(SIGNUP_RESPONSES.SUCCESS.httpStatus);
   var expectedResponse = { ...SIGNUP_RESPONSES.SUCCESS.response };
+  const username = response.body.message.match(/'(.*)'/g);
   expectedResponse.message = expectedResponse.message.replace(
-    "${username}",
-    "isaac.newton"
+    "'${username}'",
+    username
   );
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }

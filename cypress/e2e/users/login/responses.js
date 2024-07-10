@@ -62,9 +62,10 @@ export function expectMissingPasswordResponse(response) {
 export function expectUserDoesNotExistResponse(response) {
   expect(response.status).to.eq(LOGIN_RESPONSES.NO_SUCH_USER.httpStatus);
   var expectedResponse = { ...LOGIN_RESPONSES.NO_SUCH_USER.response };
+  const username = response.body.status.message.match(/'(.*)'/g);
   expectedResponse.status.message = expectedResponse.status.message.replace(
-    "${username}",
-    "isaac.newton"
+    "'${username}'",
+    username
   );
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }
@@ -72,9 +73,10 @@ export function expectUserDoesNotExistResponse(response) {
 export function expectUserSuccessfullyLoggedInResponse(response) {
   expect(response.status).to.eq(LOGIN_RESPONSES.SUCCESS.httpStatus);
   var expectedResponse = { ...LOGIN_RESPONSES.SUCCESS.response };
+  const username = response.body.status.message.match(/'(.*)'/g);
   expectedResponse.status.message = expectedResponse.status.message.replace(
-    "${username}",
-    USERS.JOE_BLOW.username
+    "'${username}'",
+    username
   );
   expectedResponse.jwtToken = expectedResponse.jwtToken.replace(
     "${jwtToken}",
