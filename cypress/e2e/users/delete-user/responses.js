@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
+import { HTTP_STATUS_CODES } from "../../common/constants";
 
 export const DELETE_USER_RESPONSES = {
   MISSING_USERNAME: {
