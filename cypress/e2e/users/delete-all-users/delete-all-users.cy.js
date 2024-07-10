@@ -13,7 +13,7 @@ import {
   expectMissingBearerTokenAuthHeaderResponse,
   expectInvalidJwtHeaderResponse,
   expectMustBeAdminResponse,
-} from "../../common/security/responses";
+} from "../../common/security";
 import { expectAllUsersSuccessfullyDeletedResponse } from "./responses";
 
 describe("Test the `DELETE /shorturl/users/all` REST endpoint", () => {

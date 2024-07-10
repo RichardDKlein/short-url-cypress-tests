@@ -10,7 +10,7 @@ import {
 import {
   expectMissingBasicAuthHeaderResponse,
   expectInvalidAdminCredentialsResponse,
-} from "../../common/security/responses";
+} from "../../common/security";
 import { expectNotOnLocalMachineResponse } from "./responses";
 
 describe("Test the `POST /shorturl/users/dbinit` REST endpoint", () => {

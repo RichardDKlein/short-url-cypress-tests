@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { HTTP_STATUS_CODES } from "../constants";
+import { HTTP_STATUS_CODES } from "./constants";
 
 export const SECURITY_RESPONSES = {
   INVALID_ADMIN_CREDENTIALS: {

@@ -10,7 +10,7 @@ import { expectAdminJwtTokenSuccessfullyGeneratedResponse } from "./responses";
 import {
   expectMissingBasicAuthHeaderResponse,
   expectInvalidAdminCredentialsResponse,
-} from "../../common/security/responses";
+} from "../../common/security";
 
 describe("Test the `GET /shorturl/users/adminjwt` REST endpoint", () => {
   beforeEach(() => {});

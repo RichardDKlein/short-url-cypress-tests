@@ -20,7 +20,7 @@ import {
   expectMissingBearerTokenAuthHeaderResponse,
   expectInvalidJwtHeaderResponse,
   expectMustBeAdminResponse,
-} from "../../common/security/responses";
+} from "../../common/security";
 import {
   expectMissingUsernameResponse,
   expectMissingPasswordResponse,

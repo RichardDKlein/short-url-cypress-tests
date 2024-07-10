@@ -13,7 +13,7 @@ import {
   expectInvalidJwtHeaderResponse,
   expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
-} from "../../common/security/responses";
+} from "../../common/security";
 import { expectAllUsersSuccessfullyRetrievedResponse } from "./responses";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {

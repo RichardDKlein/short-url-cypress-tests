@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
-import { isTimestampRecent } from "../../common/miscellaneous/timestamps";
+import { isTimestampRecent } from "../../common/timestamps";
 
 export const GET_ALL_USERS_RESPONSES = {
   SUCCESS: {
