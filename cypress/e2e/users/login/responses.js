@@ -59,7 +59,7 @@ export function expectMissingPasswordResponse(response) {
   );
 }
 
-export function expectUserDoesNotExistResponse(response) {
+export function expectNoSuchUserResponse(response) {
   expect(response.status).to.eq(LOGIN_RESPONSES.NO_SUCH_USER.httpStatus);
   var expectedResponse = { ...LOGIN_RESPONSES.NO_SUCH_USER.response };
   const username = response.body.status.message.match(/'(.*)'/g);
@@ -70,7 +70,7 @@ export function expectUserDoesNotExistResponse(response) {
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }
 
-export function expectUserSuccessfullyLoggedInResponse(response) {
+export function expectSuccessResponse(response) {
   expect(response.status).to.eq(LOGIN_RESPONSES.SUCCESS.httpStatus);
   var expectedResponse = { ...LOGIN_RESPONSES.SUCCESS.response };
   const username = response.body.status.message.match(/'(.*)'/g);

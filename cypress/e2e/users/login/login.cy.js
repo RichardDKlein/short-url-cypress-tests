@@ -24,8 +24,8 @@ import {
 import {
   expectMissingUsernameResponse,
   expectMissingPasswordResponse,
-  expectUserDoesNotExistResponse,
-  expectUserSuccessfullyLoggedInResponse,
+  expectNoSuchUserResponse,
+  expectSuccessResponse,
 } from "./responses";
 
 describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
@@ -98,14 +98,14 @@ describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
   it("attempts to log in a non-existent user", () => {
     loginNonExistentUser("isaac.newton", "isaac.newton.password").then(
       (response) => {
-        expectUserDoesNotExistResponse(response);
+        expectNoSuchUserResponse(response);
       }
     );
   });
 
-  it("logs in an existing user", () => {
+  it("successfully logs in an existing user", () => {
     loginAnExistingUser().then((response) => {
-      expectUserSuccessfullyLoggedInResponse(response);
+      expectSuccessResponse(response);
     });
   });
 });
