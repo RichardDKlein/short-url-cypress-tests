@@ -13,7 +13,7 @@ export const GET_ALL_USERS_RESPONSES = {
   },
 };
 
-export function expectAllUsersSuccessfullyRetrievedResponse(response) {
+export function expectSuccessResponse(response) {
   expect(response.status).to.eq(GET_ALL_USERS_RESPONSES.SUCCESS.httpStatus);
   expect(JSON.stringify(response.body.status)).to.eq(
     JSON.stringify(GET_ALL_USERS_RESPONSES.SUCCESS.response)
@@ -21,7 +21,7 @@ export function expectAllUsersSuccessfullyRetrievedResponse(response) {
   expectAllUsersSuccessfullyCreated(response);
 }
 
-export function expectAllUsersSuccessfullyCreated(response) {
+function expectAllUsersSuccessfullyCreated(response) {
   const actualUsers = response.body.shortUrlUsers;
   const actualNonAdminUsers = actualUsers.filter(
     (user) => user.role !== "ADMIN"

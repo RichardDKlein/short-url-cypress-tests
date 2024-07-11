@@ -14,7 +14,7 @@ import {
   expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
-import { expectAllUsersSuccessfullyRetrievedResponse } from "./responses";
+import { expectSuccessResponse } from "./responses";
 
 describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe("Test the `GET /shorturl/users/all` REST endpoint", () => {
 
   it("has a valid admin JWT token", () => {
     getAllUsersWithValidAdminJwtToken().then((response) => {
-      expectAllUsersSuccessfullyRetrievedResponse(response);
+      expectSuccessResponse(response);
     });
   });
 });
