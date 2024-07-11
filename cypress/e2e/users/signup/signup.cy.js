@@ -25,7 +25,7 @@ import {
   expectMissingUsernameResponse,
   expectMissingPasswordResponse,
   expectUserAlreadyExistsResponse,
-  expectUserSuccessfullyCreatedResponse,
+  expectSuccessResponse,
 } from "./responses";
 
 describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
@@ -101,12 +101,12 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
     });
   });
 
-  it("signs up a new user", () => {
+  it("successfully signs up a new user", () => {
     signupUser({
       username: "isaac.newton",
       password: "isaac.newton.password",
     }).then((response) => {
-      expectUserSuccessfullyCreatedResponse(response);
+      expectSuccessResponse(response);
     });
   });
 });

@@ -60,7 +60,7 @@ export function expectUserAlreadyExistsResponse(response) {
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }
 
-export function expectUserSuccessfullyCreatedResponse(response) {
+export function expectSuccessResponse(response) {
   expect(response.status).to.eq(SIGNUP_RESPONSES.SUCCESS.httpStatus);
   var expectedResponse = { ...SIGNUP_RESPONSES.SUCCESS.response };
   const username = response.body.message.match(/'(.*)'/g);
