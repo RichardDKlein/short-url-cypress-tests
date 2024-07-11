@@ -39,7 +39,7 @@ export function expectAllUsersSuccessfullyCreated(response) {
   }
 }
 
-export function verifyUserHasExpectedProperties(actualUser, expectedUser) {
+function verifyUserHasExpectedProperties(actualUser, expectedUser) {
   expect(actualUser.username).to.eq(expectedUser.username);
   expect(actualUser.role).to.eq(expectedUser.role);
   expect(actualUser.name).to.eq(expectedUser.name);

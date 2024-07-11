@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
-import { HTTP_STATUS_CODES } from "../../common/constants";
+import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
+import { isTimestampRecent } from "../../common/timestamps";
 
 export const GET_USER_DETAILS_RESPONSES = {
   MISSING_USERNAME: {
@@ -26,8 +27,11 @@ export const GET_USER_DETAILS_RESPONSES = {
   SUCCESS: {
     httpStatus: HTTP_STATUS_CODES.OK,
     response: {
-      status: "SUCCESS",
-      message: "User details successfully retrieved",
+      status: {
+        status: "SUCCESS",
+        message: "User details successfully retrieved",
+      },
+      shortUrlUser: {},
     },
   },
 };
@@ -58,5 +62,23 @@ export function expectNoSuchUserResponse(response) {
 
 export function expectUserDetailsSuccessfullyRetrievedResponse(response) {
   expect(response.status).to.eq(GET_USER_DETAILS_RESPONSES.SUCCESS.httpStatus);
-  expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
+  expect(JSON.stringify(response.body.status)).to.eq(
+    JSON.stringify(GET_USER_DETAILS_RESPONSES.SUCCESS.response.status)
+  );
+  const actualUserDetails = response.body.shortUrlUser;
+  for (const [key, value] of Object.entries(USERS)) {
+    if (value.username == actualUserDetails.username) {
+      const expectedUserDetails = value;
+      verifyUserDetails(actualUserDetails, expectedUserDetails);
+    }
+  }
+}
+
+function verifyUserDetails(actualUserDetails, expectedUserDetails) {
+  expect(actualUserDetails.username).to.eq(expectedUserDetails.username);
+  expect(actualUserDetails.role).to.eq(expectedUserDetails.role);
+  expect(actualUserDetails.name).to.eq(expectedUserDetails.name);
+  expect(actualUserDetails.email).to.eq(expectedUserDetails.email);
+  expect(actualUserDetails.lastLogin).to.eq("hasn't logged in yet");
+  expect(isTimestampRecent(actualUserDetails.accountCreationDate, 5));
 }
