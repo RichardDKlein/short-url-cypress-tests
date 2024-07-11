@@ -6,7 +6,7 @@ import {
   getAdminJwtTokenWithInvalidAdminCredentials,
   getAdminJwtTokenWithValidAdminCredentials,
 } from "./requests";
-import { expectAdminJwtTokenSuccessfullyGeneratedResponse } from "./responses";
+import { expectSuccessResponse } from "./responses";
 import {
   expectMissingBasicAuthHeaderResponse,
   expectInvalidAdminCredentialsResponse,
@@ -35,7 +35,7 @@ describe("Test the `GET /shorturl/users/adminjwt` REST endpoint", () => {
 
   it("has valid admin credentials", () => {
     getAdminJwtTokenWithValidAdminCredentials().then((response) => {
-      expectAdminJwtTokenSuccessfullyGeneratedResponse(response);
+      expectSuccessResponse(response);
     });
   });
 });
