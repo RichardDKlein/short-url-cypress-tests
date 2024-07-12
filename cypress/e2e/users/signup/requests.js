@@ -174,7 +174,7 @@ export function signupWithBlankPassword() {
   });
 }
 
-export function signupExistingUser() {
+export function signupAnExistingUser() {
   return getAdminJwtToken().then((response) => {
     getAllUsers().then((response) => {
       const actualUsers = response.body.shortUrlUsers;
@@ -193,6 +193,13 @@ export function signupExistingUser() {
       }
       signupUser(existingUser);
     });
+  });
+}
+
+export function signupNewUser() {
+  return signupUser({
+    username: "isaac.newton",
+    password: "isaac.newton.password",
   });
 }
 

@@ -12,8 +12,8 @@ import {
   signupWithMissingPassword,
   signupWithEmptyPassword,
   signupWithBlankPassword,
-  signupExistingUser,
-  signupUser,
+  signupAnExistingUser,
+  signupNewUser,
 } from "./requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
 import {
@@ -96,16 +96,13 @@ describe("Test the `POST /shorturl/users/signup` REST endpoint", () => {
   });
 
   it("attempts to sign up an existing user", () => {
-    signupExistingUser().then((response) => {
+    signupAnExistingUser().then((response) => {
       expectUserAlreadyExistsResponse(response);
     });
   });
 
   it("successfully signs up a new user", () => {
-    signupUser({
-      username: "isaac.newton",
-      password: "isaac.newton.password",
-    }).then((response) => {
+    signupNewUser().then((response) => {
       expectSuccessResponse(response);
     });
   });
