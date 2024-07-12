@@ -60,7 +60,7 @@ export function expectNoSuchUserResponse(response) {
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }
 
-export function expectUserDetailsSuccessfullyRetrievedResponse(response) {
+export function expectSuccessResponse(response) {
   expect(response.status).to.eq(GET_USER_DETAILS_RESPONSES.SUCCESS.httpStatus);
   expect(JSON.stringify(response.body.status)).to.eq(
     JSON.stringify(GET_USER_DETAILS_RESPONSES.SUCCESS.response.status)
