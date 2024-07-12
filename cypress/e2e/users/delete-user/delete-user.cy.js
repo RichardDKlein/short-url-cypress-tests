@@ -8,8 +8,8 @@ import {
   deleteUserWithMissingUsername,
   deleteUserWithEmptyUsername,
   deleteUserWithBlankUsername,
-  deleteUser,
-  deleteExistingUser,
+  deleteNonExistentUser,
+  deleteAnExistingUser,
 } from "./requests";
 import { signupAllUsers } from "../signup/requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
@@ -74,13 +74,13 @@ describe("Test the `DELETE /shorturl/users/specific` REST endpoint", () => {
   });
 
   it("attempts to delete a nonexistent user", () => {
-    deleteUser("isaac.newton").then((response) => {
+    deleteNonExistentUser().then((response) => {
       expectNoSuchUserResponse(response);
     });
   });
 
   it("deletes an existing user", () => {
-    deleteExistingUser().then((response) => {
+    deleteAnExistingUser().then((response) => {
       expectUserSuccessfullyDeletedResponse(response);
     });
   });

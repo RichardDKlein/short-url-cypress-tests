@@ -3,7 +3,6 @@
 import { USERS } from "../../common/constants";
 import { USERS_BASE_URL } from "../../common/constants";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
-import { getAllUsers } from "../get-all-users/requests";
 import { login } from "../login/requests";
 
 export function deleteUserWithNoAuthHeader() {
@@ -113,26 +112,12 @@ export function deleteUserWithBlankUsername() {
   });
 }
 
-export function deleteExistingUser() {
-  return getAdminJwtToken().then((response) => {
-    getAllUsers().then((response) => {
-      const actualUsers = response.body.shortUrlUsers;
-      const cannedUsers = Object.entries(USERS);
-      let existingUsername;
-      for (const actualUser of actualUsers) {
-        if (actualUser.role == "ADMIN") {
-          continue;
-        }
-        for (var [key, cannedUser] of cannedUsers) {
-          if (actualUser.username == cannedUser.username) {
-            existingUsername = cannedUser.username;
-            break;
-          }
-        }
-      }
-      deleteUser(existingUsername);
-    });
-  });
+export function deleteAnExistingUser() {
+  return deleteUser(USERS.JOE_BLOW.username);
+}
+
+export function deleteNonExistentUser() {
+  return deleteUser("isaac.newton");
 }
 
 export function deleteUser(username) {
