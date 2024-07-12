@@ -135,45 +135,9 @@ describe("Test the `PATCH /shorturl/users/changepassword` REST endpoint", () => 
     });
   });
 
-  it("changes the password of an existing user", () => {
+  it("successfully changes the password of an existing user", () => {
     changePasswordOfAnExistingUser().then((response) => {
       expectSuccessResponse(response);
     });
   });
 });
-/*
-            switch (shortUrlUserStatus) {
-                case SUCCESS:
-                    httpStatus = HttpStatus.OK;
-                    message = String.format(
-                            "Password successfully changed for user '%s'",
-                            username);
-                    break;
-
-                case MISSING_NEW_PASSWORD:
-                    httpStatus = HttpStatus.BAD_REQUEST;
-                    message = "A non-empty new password must be specified";
-                    break;
-
-                case MISSING_OLD_PASSWORD:
-                    httpStatus = HttpStatus.BAD_REQUEST;
-                    message = "The old password must be specified";
-                    break;
-
-                case MISSING_USERNAME:
-                    httpStatus = HttpStatus.BAD_REQUEST;
-                    message = "A non-empty username must be specified";
-                    break;
-
-                case NO_SUCH_USER:
-                    httpStatus = HttpStatus.UNAUTHORIZED;
-                    message = String.format(
-                            "User '%s' does not exist", username);
-                    break;
-
-                case WRONG_PASSWORD:
-                    httpStatus = HttpStatus.UNAUTHORIZED;
-                    message = "The specified password is not correct";
-                    break;
-
-*/
