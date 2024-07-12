@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 
 import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
+import { login } from "../login/requests";
+import { expectSuccessResponse as expectLoginSuccess } from "../login/responses";
 
 export const CHANGE_PASSWORD_RESPONSES = {
   MISSING_USERNAME: {
@@ -105,40 +107,10 @@ export function expectSuccessResponse(response) {
     username
   );
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
+  // Try logging in with the changed password
+  login(USERS.JOE_BLOW.username, USERS.JOE_BLOW.password + "-NEW").then(
+    (response) => {
+      expectLoginSuccess(response);
+    }
+  );
 }
-/*
-            switch (shortUrlUserStatus) {
-                case SUCCESS:
-                    httpStatus = HttpStatus.OK;
-                    message = String.format(
-                            "Password successfully changed for user '%s'",
-                            username);
-                    break;
-
-                case MISSING_NEW_PASSWORD:
-                    httpStatus = HttpStatus.BAD_REQUEST;
-                    message = "A non-empty new password must be specified";
-                    break;
-
-                case MISSING_OLD_PASSWORD:
-                    httpStatus = HttpStatus.BAD_REQUEST;
-                    message = "The old password must be specified";
-                    break;
-
-                case MISSING_USERNAME:
-                    httpStatus = HttpStatus.BAD_REQUEST;
-                    message = "A non-empty username must be specified";
-                    break;
-
-                case NO_SUCH_USER:
-                    httpStatus = HttpStatus.UNAUTHORIZED;
-                    message = String.format(
-                            "User '%s' does not exist", username);
-                    break;
-
-                case WRONG_PASSWORD:
-                    httpStatus = HttpStatus.UNAUTHORIZED;
-                    message = "The specified password is not correct";
-                    break;
-
-*/
