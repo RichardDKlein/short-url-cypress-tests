@@ -113,26 +113,12 @@ export function getUserDetailsWithBlankUsername() {
   });
 }
 
+export function getUserDetailsForNonExistentUser() {
+  return getUserDetails("isaac.newton");
+}
+
 export function getUserDetailsForAnExistingUser() {
-  return getAdminJwtToken().then((response) => {
-    getAllUsers().then((response) => {
-      const actualUsers = response.body.shortUrlUsers;
-      const cannedUsers = Object.entries(USERS);
-      let existingUsername;
-      for (const actualUser of actualUsers) {
-        if (actualUser.role == "ADMIN") {
-          continue;
-        }
-        for (var [key, cannedUser] of cannedUsers) {
-          if (actualUser.username == cannedUser.username) {
-            existingUsername = cannedUser.username;
-            break;
-          }
-        }
-      }
-      getUserDetails(existingUsername);
-    });
-  });
+  return getUserDetails(USERS.JOE_BLOW.username);
 }
 
 export function getUserDetails(username) {

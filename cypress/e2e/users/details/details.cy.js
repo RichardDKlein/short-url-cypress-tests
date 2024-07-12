@@ -8,7 +8,7 @@ import {
   getUserDetailsWithMissingUsername,
   getUserDetailsWithEmptyUsername,
   getUserDetailsWithBlankUsername,
-  getUserDetails,
+  getUserDetailsForNonExistentUser,
   getUserDetailsForAnExistingUser,
 } from "./requests";
 import { signupAllUsers } from "../signup/requests";
@@ -74,7 +74,7 @@ describe("Test the `GET /shorturl/users/details` REST endpoint", () => {
   });
 
   it("attempts to get details for a nonexistent user", () => {
-    getUserDetails("isaac.newton").then((response) => {
+    getUserDetailsForNonExistentUser().then((response) => {
       expectNoSuchUserResponse(response);
     });
   });
