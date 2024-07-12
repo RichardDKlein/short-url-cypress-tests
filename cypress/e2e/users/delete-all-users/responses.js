@@ -13,7 +13,7 @@ export const DELETE_ALL_USERS_RESPONSES = {
   },
 };
 
-export function expectAllUsersSuccessfullyDeletedResponse(response) {
+export function expectSuccessResponse(response) {
   expect(response.status).to.eq(DELETE_ALL_USERS_RESPONSES.SUCCESS.httpStatus);
   expect(JSON.stringify(response.body)).to.eq(
     JSON.stringify(DELETE_ALL_USERS_RESPONSES.SUCCESS.response)

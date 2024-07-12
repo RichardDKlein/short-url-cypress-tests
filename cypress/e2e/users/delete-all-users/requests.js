@@ -3,7 +3,7 @@
 import { USERS_BASE_URL, USERS } from "../../common/constants";
 import { getAdminJwtTokenWithBasicAuthHeader } from "../get-admin-jwt-token/requests";
 import { login } from "../login/requests";
-import { expectAllUsersSuccessfullyDeletedResponse } from "./responses";
+import { expectSuccessResponse } from "./responses";
 
 export function deleteAllUsersWithNoAuthHeader() {
   return cy.request({
@@ -69,7 +69,5 @@ export function deleteAllUsersWithValidAdminJwtToken() {
 }
 
 export function deleteAllUsers() {
-  return deleteAllUsersWithValidAdminJwtToken().then((response) => {
-    expectAllUsersSuccessfullyDeletedResponse(response);
-  });
+  return deleteAllUsersWithValidAdminJwtToken();
 }

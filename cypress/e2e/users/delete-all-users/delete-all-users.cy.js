@@ -14,7 +14,7 @@ import {
   expectInvalidJwtHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
-import { expectAllUsersSuccessfullyDeletedResponse } from "./responses";
+import { expectSuccessResponse } from "./responses";
 
 describe("Test the `DELETE /shorturl/users/all` REST endpoint", () => {
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe("Test the `DELETE /shorturl/users/all` REST endpoint", () => {
 
   it("has a valid admin JWT token", () => {
     deleteAllUsersWithValidAdminJwtToken().then((response) => {
-      expectAllUsersSuccessfullyDeletedResponse(response);
+      expectSuccessResponse(response);
     });
   });
 });
