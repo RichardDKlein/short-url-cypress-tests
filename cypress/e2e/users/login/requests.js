@@ -2,7 +2,6 @@
 
 import { USERS_BASE_URL, USERS } from "../../common/constants";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
-import { getAllUsers } from "../get-all-users/requests";
 
 export function loginWithNoAuthHeader() {
   return cy.request({
@@ -172,33 +171,13 @@ export function loginWithBlankPassword() {
   });
 }
 
-export function loginNonExistentUser(username, password) {
-  return login(username, password);
+export function loginNonExistentUser() {
+  return login("isaac.newton", "isaac.newton.password");
 }
 
 export function loginAnExistingUser() {
-  return getAllUsers().then((response) => {
-    const actualUsers = response.body.shortUrlUsers;
-    const cannedUsers = Object.entries(USERS);
-    let existingUsername;
-    let existingPassword;
-    for (const actualUser of actualUsers) {
-      if (actualUser.role == "ADMIN") {
-        continue;
-      }
-      for (var [key, cannedUser] of cannedUsers) {
-        if (actualUser.username == cannedUser.username) {
-          existingUsername = cannedUser.username;
-          existingPassword = cannedUser.password;
-          break;
-        }
-      }
-    }
-    login(existingUsername, existingPassword);
-  });
+  return login(USERS.JOE_BLOW.username, USERS.JOE_BLOW.password);
 }
-
-export function loginShortUrlUser(user) {}
 
 export function login(username, password) {
   return getAdminJwtToken().then((response) => {

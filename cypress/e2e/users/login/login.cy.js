@@ -96,11 +96,9 @@ describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
   });
 
   it("attempts to log in a non-existent user", () => {
-    loginNonExistentUser("isaac.newton", "isaac.newton.password").then(
-      (response) => {
-        expectNoSuchUserResponse(response);
-      }
-    );
+    loginNonExistentUser().then((response) => {
+      expectNoSuchUserResponse(response);
+    });
   });
 
   it("successfully logs in an existing user", () => {
