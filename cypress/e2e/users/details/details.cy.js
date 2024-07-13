@@ -21,7 +21,7 @@ import {
 import {
   expectMissingUsernameResponse,
   expectNoSuchUserResponse,
-  expectUserDetailsSuccessfullyRetrievedResponse,
+  expectSuccessResponse,
 } from "./responses";
 
 describe("Test the `GET /shorturl/users/details` REST endpoint", () => {
@@ -81,7 +81,7 @@ describe("Test the `GET /shorturl/users/details` REST endpoint", () => {
 
   it("gets details for an existing user", () => {
     getUserDetailsForAnExistingUser().then((response) => {
-      expectUserDetailsSuccessfullyRetrievedResponse(response);
+      expectSuccessResponse(response);
     });
   });
 });

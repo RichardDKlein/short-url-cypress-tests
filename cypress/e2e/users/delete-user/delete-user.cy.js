@@ -21,7 +21,7 @@ import {
 import {
   expectMissingUsernameResponse,
   expectNoSuchUserResponse,
-  expectUserSuccessfullyDeletedResponse,
+  expectSuccessResponse,
 } from "./responses";
 
 describe("Test the `DELETE /shorturl/users/specific` REST endpoint", () => {
@@ -81,7 +81,7 @@ describe("Test the `DELETE /shorturl/users/specific` REST endpoint", () => {
 
   it("deletes an existing user", () => {
     deleteAnExistingUser().then((response) => {
-      expectUserSuccessfullyDeletedResponse(response);
+      expectSuccessResponse(response);
     });
   });
 });
