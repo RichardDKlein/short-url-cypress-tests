@@ -16,7 +16,8 @@ import {
   changePasswordWithBlankNewPassword,
   changePasswordOfNonExistentUser,
   changePasswordWithWrongOldPassword,
-  changePasswordOfAnExistingUser,
+  changePasswordOfAnExistingNonAdminUser,
+  changePasswordOfAnExistingAdminUser,
 } from "./requests";
 import { signupAllUsers } from "../signup/requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
@@ -31,7 +32,8 @@ import {
   expectMissingNewPasswordResponse,
   expectNoSuchUserResponse,
   expectWrongPasswordResponse,
-  expectSuccessResponse,
+  expectSuccessResponseForNonAdminUser,
+  expectSuccessResponseForAdminUser,
 } from "./responses";
 
 describe("Test the `PATCH /shorturl/users/changepassword` REST endpoint", () => {
@@ -135,9 +137,15 @@ describe("Test the `PATCH /shorturl/users/changepassword` REST endpoint", () => 
     });
   });
 
-  it("successfully changes the password of an existing user", () => {
-    changePasswordOfAnExistingUser().then((response) => {
-      expectSuccessResponse(response);
+  it("successfully changes the password of an existing non-admin user", () => {
+    changePasswordOfAnExistingNonAdminUser().then((response) => {
+      expectSuccessResponseForNonAdminUser(response);
+    });
+  });
+
+  it("successfully changes the password of an existing admin user", () => {
+    changePasswordOfAnExistingAdminUser().then((response) => {
+      expectSuccessResponseForAdminUser(response);
     });
   });
 });

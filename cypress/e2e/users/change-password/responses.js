@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
+import { changePassword } from "./requests";
 import { login } from "../login/requests";
 import { expectSuccessResponse as expectLoginSuccess } from "../login/responses";
 
@@ -98,6 +99,39 @@ export function expectWrongPasswordResponse(response) {
   );
 }
 
+export function expectSuccessResponseForNonAdminUser(response) {
+  expectSuccessResponse(response);
+  // Try logging in with the changed password
+  login(USERS.JOE_BLOW.username, USERS.JOE_BLOW.password + "-NEW").then(
+    (response) => {
+      expectLoginSuccess(response);
+    }
+  );
+}
+
+export function expectSuccessResponseForAdminUser(response) {
+  expectSuccessResponse(response);
+  // Try logging in with the changed password
+  login(Cypress.env("adminUsername"), Cypress.env("adminPassword")).then(
+    (response) => {
+      expectLoginSuccess(response);
+    }
+  );
+  // Change back to the old password
+  const newAdminPassword = Cypress.env("adminPassword");
+  const oldAdminPassword = newAdminPassword.substring(
+    0,
+    newAdminPassword.indexOf("-NEW")
+  );
+  changePassword(
+    Cypress.env("adminUsername"),
+    newAdminPassword,
+    oldAdminPassword
+  ).then((response) => {
+    Cypress.env("adminPassword", oldAdminPassword);
+  });
+}
+
 export function expectSuccessResponse(response) {
   expect(response.status).to.eq(CHANGE_PASSWORD_RESPONSES.SUCCESS.httpStatus);
   var expectedResponse = { ...CHANGE_PASSWORD_RESPONSES.SUCCESS.response };
@@ -107,10 +141,4 @@ export function expectSuccessResponse(response) {
     username
   );
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
-  // Try logging in with the changed password
-  login(USERS.JOE_BLOW.username, USERS.JOE_BLOW.password + "-NEW").then(
-    (response) => {
-      expectLoginSuccess(response);
-    }
-  );
 }

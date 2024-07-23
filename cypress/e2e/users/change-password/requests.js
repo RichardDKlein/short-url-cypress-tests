@@ -254,12 +254,23 @@ export function changePasswordWithWrongOldPassword() {
   );
 }
 
-export function changePasswordOfAnExistingUser() {
+export function changePasswordOfAnExistingNonAdminUser() {
   return changePassword(
     USERS.JOE_BLOW.username,
     USERS.JOE_BLOW.password,
     USERS.JOE_BLOW.password + "-NEW"
   );
+}
+
+export function changePasswordOfAnExistingAdminUser() {
+  const oldAdminPassword = Cypress.env("adminPassword");
+  return changePassword(
+    Cypress.env("adminUsername"),
+    oldAdminPassword,
+    oldAdminPassword + "-NEW"
+  ).then((response) => {
+    Cypress.env("adminPassword", oldAdminPassword + "-NEW");
+  });
 }
 
 export function changePassword(username, oldPassword, newPassword) {
