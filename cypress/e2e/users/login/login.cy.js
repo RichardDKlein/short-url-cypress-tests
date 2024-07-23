@@ -12,7 +12,8 @@ import {
   loginWithEmptyPassword,
   loginWithBlankPassword,
   loginNonExistentUser,
-  loginAnExistingUser,
+  loginAnExistingNonAdminUser,
+  loginAnExistingAdminUser,
 } from "./requests";
 import { signupAllUsers } from "../signup/requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
@@ -25,7 +26,8 @@ import {
   expectMissingUsernameResponse,
   expectMissingPasswordResponse,
   expectNoSuchUserResponse,
-  expectSuccessResponse,
+  expectSuccessResponseToNonAdminLogin,
+  expectSuccessResponseToAdminLogin,
 } from "./responses";
 
 describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
@@ -101,9 +103,15 @@ describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
     });
   });
 
-  it("successfully logs in an existing user", () => {
-    loginAnExistingUser().then((response) => {
-      expectSuccessResponse(response);
+  it("successfully logs in an existing non-admin user", () => {
+    loginAnExistingNonAdminUser().then((response) => {
+      expectSuccessResponseToNonAdminLogin(response);
+    });
+  });
+
+  it("successfully logs in an existing admin user", () => {
+    loginAnExistingAdminUser().then((response) => {
+      expectSuccessResponseToAdminLogin(response);
     });
   });
 });

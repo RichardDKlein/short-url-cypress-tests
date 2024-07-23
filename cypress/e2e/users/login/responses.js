@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 
 import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
+import { getAllUsersWithSpecifiedAdminJwtToken } from "../get-all-users/requests";
+import { expectSuccessResponse as expectGetAllUsersSuccess } from "../get-all-users/responses";
 
 export const LOGIN_RESPONSES = {
   MISSING_USERNAME: {
@@ -70,17 +72,29 @@ export function expectNoSuchUserResponse(response) {
   expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }
 
+export function expectSuccessResponseToNonAdminLogin(response) {
+  expectSuccessResponse(response);
+}
+
+export function expectSuccessResponseToAdminLogin(response) {
+  expectSuccessResponse(response);
+  // Verify that the returned `jwtToken` is a valid admin JWT token.
+  getAllUsersWithSpecifiedAdminJwtToken(response.body.jwtToken).then(
+    (response) => {
+      expectGetAllUsersSuccess(response);
+    }
+  );
+}
+
 export function expectSuccessResponse(response) {
   expect(response.status).to.eq(LOGIN_RESPONSES.SUCCESS.httpStatus);
-  var expectedResponse = { ...LOGIN_RESPONSES.SUCCESS.response };
+  var expectedStatus = { ...LOGIN_RESPONSES.SUCCESS.response.status };
   const username = response.body.status.message.match(/'(.*)'/g);
-  expectedResponse.status.message = expectedResponse.status.message.replace(
+  expectedStatus.message = expectedStatus.message.replace(
     "'${username}'",
     username
   );
-  expectedResponse.jwtToken = expectedResponse.jwtToken.replace(
-    "${jwtToken}",
-    response.body.jwtToken
+  expect(JSON.stringify(response.body.status)).to.eq(
+    JSON.stringify(expectedStatus)
   );
-  expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }

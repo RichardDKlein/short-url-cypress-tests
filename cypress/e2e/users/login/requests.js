@@ -175,8 +175,12 @@ export function loginNonExistentUser() {
   return login("isaac.newton", "isaac.newton.password");
 }
 
-export function loginAnExistingUser() {
+export function loginAnExistingNonAdminUser() {
   return login(USERS.JOE_BLOW.username, USERS.JOE_BLOW.password);
+}
+
+export function loginAnExistingAdminUser() {
+  return login(Cypress.env("adminUsername"), Cypress.env("adminPassword"));
 }
 
 export function login(username, password) {

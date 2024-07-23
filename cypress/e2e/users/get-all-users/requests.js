@@ -53,14 +53,18 @@ export function getAllUsersWithValidButNonAdminJwtToken() {
 export function getAllUsersWithValidAdminJwtToken() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${USERS_BASE_URL}/all`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      failOnStatusCode: false,
-    });
+    getAllUsersWithSpecifiedAdminJwtToken(adminJwtToken);
+  });
+}
+
+export function getAllUsersWithSpecifiedAdminJwtToken(adminJwtToken) {
+  return cy.request({
+    method: "GET",
+    url: `${USERS_BASE_URL}/all`,
+    headers: {
+      Authorization: `Bearer ${adminJwtToken}`,
+    },
+    failOnStatusCode: false,
   });
 }
 
