@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
+import { getAdminPassword, createSsmClient } from "../../common/aws";
 import { changePassword } from "./requests";
 import { login } from "../login/requests";
 import { expectSuccessResponse as expectLoginSuccess } from "../login/responses";
@@ -101,7 +102,8 @@ export function expectWrongPasswordResponse(response) {
 
 export function expectSuccessResponseForNonAdminUser(response) {
   expectSuccessResponse(response);
-  // Try logging in with the changed password
+
+  // Try logging in with the new password
   login(USERS.JOE_BLOW.username, USERS.JOE_BLOW.password + "-NEW").then(
     (response) => {
       expectLoginSuccess(response);
@@ -111,24 +113,24 @@ export function expectSuccessResponseForNonAdminUser(response) {
 
 export function expectSuccessResponseForAdminUser(response) {
   expectSuccessResponse(response);
-  // Try logging in with the changed password
-  login(Cypress.env("adminUsername"), Cypress.env("adminPassword")).then(
-    (response) => {
-      expectLoginSuccess(response);
-    }
-  );
-  // Change back to the old password
-  const newAdminPassword = Cypress.env("adminPassword");
-  const oldAdminPassword = newAdminPassword.substring(
-    0,
-    newAdminPassword.indexOf("-NEW")
-  );
-  changePassword(
-    Cypress.env("adminUsername"),
-    newAdminPassword,
-    oldAdminPassword
-  ).then((response) => {
-    Cypress.env("adminPassword", oldAdminPassword);
+
+  createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    getAdminPassword(ssmClient).then((newAdminPassword) => {
+      // Verify that the new password has been saved in the AWS Parameter Store
+      const oldAdminPassword = Cypress.env("adminPassword");
+      expect(newAdminPassword).to.eq(oldAdminPassword + "-NEW");
+      Cypress.env("adminPassword", newAdminPassword);
+
+      // Try logging in with the new password
+      const adminUsername = Cypress.env("adminUsername");
+      login(adminUsername, newAdminPassword).then((response) => {
+        expectLoginSuccess(response);
+      });
+
+      // Change back to the old password
+      changePassword(adminUsername, newAdminPassword, oldAdminPassword);
+      Cypress.env("adminPassword", oldAdminPassword);
+    });
   });
 }
 

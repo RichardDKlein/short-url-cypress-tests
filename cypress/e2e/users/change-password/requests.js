@@ -263,14 +263,13 @@ export function changePasswordOfAnExistingNonAdminUser() {
 }
 
 export function changePasswordOfAnExistingAdminUser() {
+  const adminUsername = Cypress.env("adminUsername");
   const oldAdminPassword = Cypress.env("adminPassword");
   return changePassword(
-    Cypress.env("adminUsername"),
+    adminUsername,
     oldAdminPassword,
     oldAdminPassword + "-NEW"
-  ).then((response) => {
-    Cypress.env("adminPassword", oldAdminPassword + "-NEW");
-  });
+  );
 }
 
 export function changePassword(username, oldPassword, newPassword) {
