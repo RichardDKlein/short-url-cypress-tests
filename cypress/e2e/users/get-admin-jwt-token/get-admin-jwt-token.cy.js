@@ -33,7 +33,7 @@ describe("Test the `GET /shorturl/users/adminjwt` REST endpoint", () => {
     });
   });
 
-  it("has valid admin credentials", () => {
+  it("successfully gets an admin JWT token", () => {
     getAdminJwtTokenWithValidAdminCredentials().then((response) => {
       expectSuccessResponse(response);
     });

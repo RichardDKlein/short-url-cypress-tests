@@ -79,7 +79,7 @@ describe("Test the `DELETE /shorturl/users/specific` REST endpoint", () => {
     });
   });
 
-  it("deletes an existing user", () => {
+  it("successfully deletes an existing user", () => {
     deleteAnExistingUser().then((response) => {
       expectSuccessResponse(response);
     });

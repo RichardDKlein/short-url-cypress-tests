@@ -79,7 +79,7 @@ describe("Test the `GET /shorturl/users/details` REST endpoint", () => {
     });
   });
 
-  it("gets details for an existing user", () => {
+  it("successfully gets details for an existing user", () => {
     getUserDetailsForAnExistingUser().then((response) => {
       expectSuccessResponse(response);
     });
