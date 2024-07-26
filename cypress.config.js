@@ -14,7 +14,6 @@ module.exports = defineConfig({
 
         // Define a task to load the AWS config from the specified path.
         loadAwsConfig(awsConfigFilePath) {
-          console.log(`Loading AWS config file from: ${awsConfigFilePath}`);
           try {
             const awsConfigFileContent = fs.readFileSync(
               awsConfigFilePath,
@@ -33,9 +32,6 @@ module.exports = defineConfig({
 
         // Define a task to load the AWS credentials from the specifie path.
         loadAwsCredentials(awsCredentialsFilePath) {
-          console.log(
-            `Loading AWS credentials file from: ${awsCredentialsFilePath}`
-          );
           try {
             const awsCredentialsFileContent = fs.readFileSync(
               awsCredentialsFilePath,
