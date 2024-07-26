@@ -25,6 +25,16 @@ export const LOGIN_RESPONSES = {
       jwtToken: null,
     },
   },
+  WRONG_PASSWORD: {
+    httpStatus: HTTP_STATUS_CODES.UNAUTHORIZED,
+    response: {
+      status: {
+        status: "WRONG_PASSWORD",
+        message: "The specified password is not correct",
+      },
+      jwtToken: null,
+    },
+  },
   NO_SUCH_USER: {
     httpStatus: HTTP_STATUS_CODES.UNAUTHORIZED,
     response: {
@@ -58,6 +68,13 @@ export function expectMissingPasswordResponse(response) {
   expect(response.status).to.eq(LOGIN_RESPONSES.MISSING_PASSWORD.httpStatus);
   expect(JSON.stringify(response.body)).to.eq(
     JSON.stringify(LOGIN_RESPONSES.MISSING_PASSWORD.response)
+  );
+}
+
+export function expectWrongPasswordResponse(response) {
+  expect(response.status).to.eq(LOGIN_RESPONSES.WRONG_PASSWORD.httpStatus);
+  expect(JSON.stringify(response.body)).to.eq(
+    JSON.stringify(LOGIN_RESPONSES.WRONG_PASSWORD.response)
   );
 }
 

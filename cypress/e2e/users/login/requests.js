@@ -171,6 +171,10 @@ export function loginWithBlankPassword() {
   });
 }
 
+export function loginWithWrongPassword() {
+  return login(USERS.JOE_BLOW.username, USERS.JOE_BLOW.password + "-WRONG");
+}
+
 export function loginNonExistentUser() {
   return login("isaac.newton", "isaac.newton.password");
 }

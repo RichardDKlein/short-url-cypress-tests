@@ -11,6 +11,7 @@ import {
   loginWithMissingPassword,
   loginWithEmptyPassword,
   loginWithBlankPassword,
+  loginWithWrongPassword,
   loginNonExistentUser,
   loginAnExistingNonAdminUser,
   loginAnExistingAdminUser,
@@ -28,6 +29,7 @@ import {
   expectNoSuchUserResponse,
   expectSuccessResponseToNonAdminLogin,
   expectSuccessResponseToAdminLogin,
+  expectWrongPasswordResponse,
 } from "./responses";
 
 describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
@@ -100,6 +102,12 @@ describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
   it("attempts to log in a non-existent user", () => {
     loginNonExistentUser().then((response) => {
       expectNoSuchUserResponse(response);
+    });
+  });
+
+  it("specifies the wrong password", () => {
+    loginWithWrongPassword().then((response) => {
+      expectWrongPasswordResponse(response);
     });
   });
 
