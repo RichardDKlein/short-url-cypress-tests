@@ -36,7 +36,7 @@ import {
   expectSuccessResponseForAdminUser,
 } from "./responses";
 
-describe("Test the `PATCH /shorturl/users/changepassword` REST endpoint", () => {
+describe("Test the `PATCH /short-url/users/change-password` REST endpoint", () => {
   beforeEach(() => {
     deleteAllUsers().then(() => {
       signupAllUsers();

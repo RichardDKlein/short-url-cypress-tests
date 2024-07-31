@@ -16,7 +16,7 @@ import {
 } from "../../common/security";
 import { expectSuccessResponse } from "./responses";
 
-describe("Test the `DELETE /shorturl/users/all` REST endpoint", () => {
+describe("Test the `DELETE /short-url/users/all` REST endpoint", () => {
   beforeEach(() => {
     deleteAllUsers().then(() => {
       signupAllUsers();

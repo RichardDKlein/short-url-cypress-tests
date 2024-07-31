@@ -12,7 +12,7 @@ import {
   expectInvalidAdminCredentialsResponse,
 } from "../../common/security";
 
-describe("Test the `GET /shorturl/users/adminjwt` REST endpoint", () => {
+describe("Test the `GET /short-url/users/admin-jwt` REST endpoint", () => {
   beforeEach(() => {});
 
   it("doesn't have an authorization header", () => {

@@ -13,7 +13,7 @@ import {
 } from "../../common/security";
 import { expectNotOnLocalMachineResponse } from "./responses";
 
-describe("Test the `POST /shorturl/users/dbinit` REST endpoint", () => {
+describe("Test the `POST /short-url/users/db-init` REST endpoint", () => {
   beforeEach(() => {});
 
   it("doesn't have an authorization header", () => {

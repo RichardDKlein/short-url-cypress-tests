@@ -5,7 +5,7 @@ import { USERS_BASE_URL } from "../../common/constants";
 export function getAdminJwtTokenWithNoAuthHeader() {
   return cy.request({
     method: "GET",
-    url: `${USERS_BASE_URL}/adminjwt`,
+    url: `${USERS_BASE_URL}/admin-jwt`,
     failOnStatusCode: false,
   });
 }
@@ -13,7 +13,7 @@ export function getAdminJwtTokenWithNoAuthHeader() {
 export function getAdminJwtTokenWithWrongKindOfAuthHeader() {
   return cy.request({
     method: "GET",
-    url: `${USERS_BASE_URL}/adminjwt`,
+    url: `${USERS_BASE_URL}/admin-jwt`,
     headers: {
       Authorization: "Bearer " + "dummy.jwt.token",
     },
@@ -38,7 +38,7 @@ export function getAdminJwtTokenWithValidAdminCredentials() {
 export function getAdminJwtTokenWithBasicAuthHeader(username, password) {
   return cy.request({
     method: "GET",
-    url: `${USERS_BASE_URL}/adminjwt`,
+    url: `${USERS_BASE_URL}/admin-jwt`,
     headers: {
       Authorization: "Basic " + btoa(`${username}:${password}`),
     },

@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-export const USERS_BASE_URL = "https://test.richarddklein.com/shorturl/users";
+export const USERS_BASE_URL = "https://test.richarddklein.com/short-url/users";
 
 export const HTTP_STATUS_CODES = {
   OK: 200,

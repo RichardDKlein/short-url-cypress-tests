@@ -24,7 +24,7 @@ import {
   expectSuccessResponse,
 } from "./responses";
 
-describe("Test the `GET /shorturl/users/details` REST endpoint", () => {
+describe("Test the `GET /short-url/users/details` REST endpoint", () => {
   beforeEach(() => {
     deleteAllUsers().then(() => {
       signupAllUsers();

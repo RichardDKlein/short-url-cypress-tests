@@ -32,7 +32,7 @@ import {
   expectWrongPasswordResponse,
 } from "./responses";
 
-describe("Test the `POST /shorturl/users/login` REST endpoint", () => {
+describe("Test the `POST /short-url/users/login` REST endpoint", () => {
   beforeEach(() => {
     deleteAllUsers().then(() => {
       signupAllUsers();

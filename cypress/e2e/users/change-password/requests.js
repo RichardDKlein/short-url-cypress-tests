@@ -7,7 +7,7 @@ import { login } from "../login/requests";
 export function changePasswordWithNoAuthHeader() {
   return cy.request({
     method: "PATCH",
-    url: `${USERS_BASE_URL}/changepassword`,
+    url: `${USERS_BASE_URL}/change-password`,
     body: {
       username: "isaac.newton",
       oldPassword: "isaac.newton.old.password",
@@ -20,7 +20,7 @@ export function changePasswordWithNoAuthHeader() {
 export function changePasswordWithWrongKindOfAuthHeader() {
   return cy.request({
     method: "PATCH",
-    url: `${USERS_BASE_URL}/changepassword`,
+    url: `${USERS_BASE_URL}/change-password`,
     body: {
       username: "isaac.newton",
       oldPassword: "isaac.newton.old.password",
@@ -36,7 +36,7 @@ export function changePasswordWithWrongKindOfAuthHeader() {
 export function changePasswordWithInvalidJwtToken() {
   return cy.request({
     method: "PATCH",
-    url: `${USERS_BASE_URL}/changepassword`,
+    url: `${USERS_BASE_URL}/change-password`,
     body: {
       username: "isaac.newton",
       oldPassword: "isaac.newton.old.password",
@@ -55,7 +55,7 @@ export function changePasswordWithValidButNonAdminJwtToken() {
       const nonAdminJwtToken = response.body.jwtToken;
       cy.request({
         method: "PATCH",
-        url: `${USERS_BASE_URL}/changepassword`,
+        url: `${USERS_BASE_URL}/change-password`,
         body: {
           username: "isaac.newton",
           oldPassword: "isaac.newton.old.password",
@@ -75,7 +75,7 @@ export function changePasswordWithMissingUsername() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         oldPassword: "isaac.newton.old.password",
         newPassword: "isaac.newton.new.password",
@@ -93,7 +93,7 @@ export function changePasswordWithEmptyUsername() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         username: "",
         oldPassword: "isaac.newton.old.password",
@@ -112,7 +112,7 @@ export function changePasswordWithBlankUsername() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         username: "   ",
         oldPassword: "isaac.newton.old.password",
@@ -131,7 +131,7 @@ export function changePasswordWithMissingOldPassword() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         username: "isaac.newton",
         newPassword: "isaac.newton.new.password",
@@ -149,7 +149,7 @@ export function changePasswordWithEmptyOldPassword() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         username: "isaac.newton",
         oldPassword: "",
@@ -168,7 +168,7 @@ export function changePasswordWithBlankOldPassword() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         username: "isaac.newton",
         oldPassword: "   ",
@@ -187,7 +187,7 @@ export function changePasswordWithMissingNewPassword() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         username: "isaac.newton",
         oldPassword: "isaac.newton.old.password",
@@ -205,7 +205,7 @@ export function changePasswordWithEmptyNewPassword() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         username: "isaac.newton",
         oldPassword: "isaac.newton.old.password",
@@ -224,7 +224,7 @@ export function changePasswordWithBlankNewPassword() {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: {
         username: "isaac.newton",
         oldPassword: "isaac.newton.old.password",
@@ -277,7 +277,7 @@ export function changePassword(username, oldPassword, newPassword) {
     const adminJwtToken = response.body.jwtToken;
     return cy.request({
       method: "PATCH",
-      url: `${USERS_BASE_URL}/changepassword`,
+      url: `${USERS_BASE_URL}/change-password`,
       body: { username, oldPassword, newPassword },
       headers: {
         Authorization: "Bearer " + adminJwtToken,
