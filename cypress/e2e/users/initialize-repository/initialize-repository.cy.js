@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 import {
-  initializeRepositoryWithBasicAuthHeader,
   initializeRepositoryWithWrongKindOfAuthHeader,
   initializeRepositoryWithNoAuthHeader,
   initializeRepositoryWithInvalidAdminCredentials,
@@ -13,7 +12,7 @@ import {
 } from "../../common/security";
 import { expectNotOnLocalMachineResponse } from "./responses";
 
-describe("Test the `POST /short-url/users/db-init` REST endpoint", () => {
+describe("Test the `POST /short-url/users/initialize-repository` REST endpoint", () => {
   beforeEach(() => {});
 
   it("doesn't have an authorization header", () => {
