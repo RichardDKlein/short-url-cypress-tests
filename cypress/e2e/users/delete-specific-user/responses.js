@@ -2,14 +2,7 @@
 
 import { HTTP_STATUS_CODES } from "../../common/constants";
 
-export const DELETE_USER_RESPONSES = {
-  MISSING_USERNAME: {
-    httpStatus: HTTP_STATUS_CODES.BAD_REQUEST,
-    response: {
-      status: "MISSING_USERNAME",
-      message: "A non-empty username must be specified",
-    },
-  },
+export const DELETE_SPECIFIC_USER_RESPONSES = {
   NO_SUCH_USER: {
     httpStatus: HTTP_STATUS_CODES.NOT_FOUND,
     response: {
@@ -26,18 +19,13 @@ export const DELETE_USER_RESPONSES = {
   },
 };
 
-export function expectMissingUsernameResponse(response) {
-  expect(response.status).to.eq(
-    DELETE_USER_RESPONSES.MISSING_USERNAME.httpStatus
-  );
-  expect(JSON.stringify(response.body)).to.eq(
-    JSON.stringify(DELETE_USER_RESPONSES.MISSING_USERNAME.response)
-  );
-}
-
 export function expectNoSuchUserResponse(response) {
-  expect(response.status).to.eq(DELETE_USER_RESPONSES.NO_SUCH_USER.httpStatus);
-  var expectedResponse = { ...DELETE_USER_RESPONSES.NO_SUCH_USER.response };
+  expect(response.status).to.eq(
+    DELETE_SPECIFIC_USER_RESPONSES.NO_SUCH_USER.httpStatus
+  );
+  var expectedResponse = {
+    ...DELETE_SPECIFIC_USER_RESPONSES.NO_SUCH_USER.response,
+  };
   const username = response.body.message.match(/'(.*)'/g);
   expectedResponse.message = expectedResponse.message.replace(
     "'${username}'",
@@ -47,8 +35,10 @@ export function expectNoSuchUserResponse(response) {
 }
 
 export function expectSuccessResponse(response) {
-  expect(response.status).to.eq(DELETE_USER_RESPONSES.SUCCESS.httpStatus);
-  var expectedResponse = { ...DELETE_USER_RESPONSES.SUCCESS.response };
+  expect(response.status).to.eq(
+    DELETE_SPECIFIC_USER_RESPONSES.SUCCESS.httpStatus
+  );
+  var expectedResponse = { ...DELETE_SPECIFIC_USER_RESPONSES.SUCCESS.response };
   const username = response.body.message.match(/'(.*)'/g);
   expectedResponse.message = expectedResponse.message.replace(
     "'${username}'",

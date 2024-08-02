@@ -3,17 +3,7 @@
 import { HTTP_STATUS_CODES, USERS } from "../../common/constants";
 import { isTimestampRecent } from "../../common/timestamps";
 
-export const GET_USER_DETAILS_RESPONSES = {
-  MISSING_USERNAME: {
-    httpStatus: HTTP_STATUS_CODES.BAD_REQUEST,
-    response: {
-      status: {
-        status: "MISSING_USERNAME",
-        message: "A non-empty username must be specified",
-      },
-      shortUrlUser: null,
-    },
-  },
+export const GET_SPECIFIC_USER_RESPONSES = {
   NO_SUCH_USER: {
     httpStatus: HTTP_STATUS_CODES.NOT_FOUND,
     response: {
@@ -29,28 +19,19 @@ export const GET_USER_DETAILS_RESPONSES = {
     response: {
       status: {
         status: "SUCCESS",
-        message: "User details successfully retrieved",
+        message: "User successfully retrieved",
       },
       shortUrlUser: {},
     },
   },
 };
 
-export function expectMissingUsernameResponse(response) {
-  expect(response.status).to.eq(
-    GET_USER_DETAILS_RESPONSES.MISSING_USERNAME.httpStatus
-  );
-  expect(JSON.stringify(response.body)).to.eq(
-    JSON.stringify(GET_USER_DETAILS_RESPONSES.MISSING_USERNAME.response)
-  );
-}
-
 export function expectNoSuchUserResponse(response) {
   expect(response.status).to.eq(
-    GET_USER_DETAILS_RESPONSES.NO_SUCH_USER.httpStatus
+    GET_SPECIFIC_USER_RESPONSES.NO_SUCH_USER.httpStatus
   );
   var expectedResponse = {
-    ...GET_USER_DETAILS_RESPONSES.NO_SUCH_USER.response,
+    ...GET_SPECIFIC_USER_RESPONSES.NO_SUCH_USER.response,
   };
   const username = response.body.status.message.match(/'(.*)'/g);
   expectedResponse.status.message = expectedResponse.status.message.replace(
@@ -61,9 +42,9 @@ export function expectNoSuchUserResponse(response) {
 }
 
 export function expectSuccessResponse(response) {
-  expect(response.status).to.eq(GET_USER_DETAILS_RESPONSES.SUCCESS.httpStatus);
+  expect(response.status).to.eq(GET_SPECIFIC_USER_RESPONSES.SUCCESS.httpStatus);
   expect(JSON.stringify(response.body.status)).to.eq(
-    JSON.stringify(GET_USER_DETAILS_RESPONSES.SUCCESS.response.status)
+    JSON.stringify(GET_SPECIFIC_USER_RESPONSES.SUCCESS.response.status)
   );
   const actualUserDetails = response.body.shortUrlUser;
   for (const [key, value] of Object.entries(USERS)) {
