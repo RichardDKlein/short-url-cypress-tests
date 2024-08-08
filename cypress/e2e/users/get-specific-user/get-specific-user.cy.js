@@ -5,8 +5,6 @@ import {
   getSpecificUserWithWrongKindOfAuthHeader,
   getSpecificUserWithInvalidJwtToken,
   getSpecificUserWithValidButNonAdminJwtToken,
-  getSpecificUserWithMissingUsername,
-  getSpecificUserWithBlankUsername,
   getSpecificUserForNonExistentUser,
   getSpecificUserForAnExistingUser,
 } from "./requests";
@@ -17,11 +15,7 @@ import {
   expectInvalidJwtHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
-import {
-  expectMissingUsernameResponse,
-  expectNoSuchUserResponse,
-  expectSuccessResponse,
-} from "./responses";
+import { expectNoSuchUserResponse, expectSuccessResponse } from "./responses";
 
 describe("Test the `GET /short-url/users/specific/{username}` REST endpoint", () => {
   beforeEach(() => {

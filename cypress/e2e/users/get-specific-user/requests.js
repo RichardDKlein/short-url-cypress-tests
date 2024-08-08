@@ -65,7 +65,6 @@ export function getSpecificUser(username) {
     cy.request({
       method: "GET",
       url: `${USERS_BASE_URL}/specific/${username}`,
-      body: { username },
       headers: {
         Authorization: `Bearer ${adminJwtToken}`,
       },
