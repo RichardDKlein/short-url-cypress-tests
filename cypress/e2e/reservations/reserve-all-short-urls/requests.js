@@ -6,18 +6,18 @@ import { signupAllUsers } from "../../users/signup/requests";
 import { login } from "../../users/login/requests";
 import { getAdminJwtToken } from "../../users/get-admin-jwt-token/requests";
 
-export function getAllReservationsWithNoAuthHeader() {
+export function reserveAllShortUrlsWithNoAuthHeader() {
   return cy.request({
-    method: "GET",
-    url: `${RESERVATIONS_BASE_URL}/all`,
+    method: "PATCH",
+    url: `${RESERVATIONS_BASE_URL}/reserve/all`,
     failOnStatusCode: false,
   });
 }
 
-export function getAllReservationsWithWrongKindOfAuthHeader() {
+export function reserveAllShortUrlsWithWrongKindOfAuthHeader() {
   return cy.request({
-    method: "GET",
-    url: `${RESERVATIONS_BASE_URL}/all`,
+    method: "PATCH",
+    url: `${RESERVATIONS_BASE_URL}/reserve/all`,
     headers: {
       Authorization: "Basic " + btoa("username:password"),
     },
@@ -25,10 +25,10 @@ export function getAllReservationsWithWrongKindOfAuthHeader() {
   });
 }
 
-export function getAllReservationsWithInvalidJwtToken() {
+export function reserveAllShortUrlsWithInvalidJwtToken() {
   return cy.request({
-    method: "GET",
-    url: `${RESERVATIONS_BASE_URL}/all`,
+    method: "PATCH",
+    url: `${RESERVATIONS_BASE_URL}/reserve/all`,
     headers: {
       Authorization: "Bearer " + "invalid.jwt.token",
     },
@@ -36,15 +36,15 @@ export function getAllReservationsWithInvalidJwtToken() {
   });
 }
 
-export function getAllReservationsWithValidButNonAdminJwtToken() {
+export function reserveAllShortUrlsWithValidButNonAdminJwtToken() {
   return deleteAllUsers().then(() => {
     signupAllUsers().then(() => {
       login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
         (response) => {
           const nonAdminJwtToken = response.body.jwtToken;
           cy.request({
-            method: "GET",
-            url: `${RESERVATIONS_BASE_URL}/all`,
+            method: "PATCH",
+            url: `${RESERVATIONS_BASE_URL}/reserve/all`,
             headers: {
               Authorization: `Bearer ${nonAdminJwtToken}`,
             },
@@ -56,24 +56,20 @@ export function getAllReservationsWithValidButNonAdminJwtToken() {
   });
 }
 
-export function getAllReservationsWithValidAdminJwtToken() {
+export function reserveAllShortUrlsWithValidAdminJwtToken() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    getAllReservationsWithSpecifiedAdminJwtToken(adminJwtToken);
+    reserveAllShortUrlsWithSpecifiedAdminJwtToken(adminJwtToken);
   });
 }
 
-export function getAllReservationsWithSpecifiedAdminJwtToken(adminJwtToken) {
+export function reserveAllShortUrlsWithSpecifiedAdminJwtToken(adminJwtToken) {
   return cy.request({
-    method: "GET",
-    url: `${RESERVATIONS_BASE_URL}/all`,
+    method: "PATCH",
+    url: `${RESERVATIONS_BASE_URL}/reserve/all`,
     headers: {
       Authorization: `Bearer ${adminJwtToken}`,
     },
     failOnStatusCode: false,
   });
-}
-
-export function getAllReservations() {
-  return getAllReservationsWithValidAdminJwtToken();
 }
