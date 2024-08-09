@@ -73,3 +73,7 @@ export function reserveAllShortUrlsWithSpecifiedAdminJwtToken(adminJwtToken) {
     failOnStatusCode: false,
   });
 }
+
+export function reserveAllShortUrls() {
+  return reserveAllShortUrlsWithValidAdminJwtToken();
+}
