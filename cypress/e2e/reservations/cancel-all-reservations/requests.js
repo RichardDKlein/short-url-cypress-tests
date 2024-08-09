@@ -73,3 +73,7 @@ export function cancelAllReservationsWithSpecifiedAdminJwtToken(adminJwtToken) {
     failOnStatusCode: false,
   });
 }
+
+export function cancelAllReservations() {
+  return cancelAllReservationsWithValidAdminJwtToken();
+}
