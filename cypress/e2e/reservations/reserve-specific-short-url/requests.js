@@ -2,7 +2,7 @@
 
 import { USERS } from "../../common/constants";
 import { RESERVATIONS_BASE_URL } from "../../common/constants";
-import { cancelAllReservations } from "../cancel-all-reservations/requests";
+import { cancelSpecificReservationForShortUrl } from "../cancel-specific-reservation/requests";
 import { getAdminJwtToken } from "../../users/get-admin-jwt-token/requests";
 import { login } from "../../users/login/requests";
 
@@ -57,7 +57,7 @@ export function reserveSpecificNonExistentShortUrl() {
 }
 
 export function reserveSpecificAlreadyReservedShortUrl() {
-  return cancelAllReservations().then(() => {
+  return cancelSpecificReservationForShortUrl("bx3raV").then(() => {
     reserveSpecificShortUrl("bx3raV").then((response) => {
       reserveSpecificShortUrl("bx3raV");
     });
@@ -65,7 +65,7 @@ export function reserveSpecificAlreadyReservedShortUrl() {
 }
 
 export function reserveSpecificAvailableShortUrl() {
-  return cancelAllReservations().then(() => {
+  return cancelSpecificReservationForShortUrl("bx3raV").then(() => {
     reserveSpecificShortUrl("bx3raV");
   });
 }
