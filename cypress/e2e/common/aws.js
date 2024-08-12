@@ -65,3 +65,14 @@ export function getJwtMinutesToLive(ssmClient) {
     return response.Parameter.Value;
   });
 }
+
+export function getShortUrlRange(ssmClient) {
+  const command = new GetParameterCommand({
+    Name: "/shortUrl/reservations/range",
+    WithDecryption: true,
+  });
+  return cy.wrap(ssmClient.send(command)).then((response) => {
+    const range = response.Parameter.Value;
+    return range.split(",").map((n) => parseInt(n.trim(), 10));
+  });
+}

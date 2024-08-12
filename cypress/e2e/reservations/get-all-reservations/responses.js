@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import { HTTP_STATUS_CODES } from "../../common/constants";
+import { computeShortUrls } from "../../common/short-urls";
 
 export const GET_ALL_RESERVATIONS_RESPONSES = {
   SUCCESS: {
@@ -27,15 +28,27 @@ export function expectSuccessResponse(response) {
 
 function expectAllReservationsSuccessfullyRetrieved(response) {
   const reservations = response.body.shortUrlReservations;
-  const shortUrls = reservations.map((reservation) => reservation.shortUrl);
-  const uniqueShortUrls = new Set(shortUrls);
-  expect(shortUrls.length).to.equal(uniqueShortUrls.size);
-  shortUrls.forEach((shortUrl) => {
-    expect(shortUrl.length).to.equal(6);
-  });
+  const actualShortUrls = new Set(
+    reservations.map((reservation) => reservation.shortUrl)
+  );
+  const expectedShortUrls = computeShortUrls();
+  expect(setsAreEqual(actualShortUrls, expectedShortUrls)).to.be.true;
+
   reservations.forEach((reservation) => {
     expect(reservation).to.have.property("isAvailable");
     expect(reservation).to.have.property("version");
     expect(reservation.version).to.be.a("number");
   });
+}
+
+function setsAreEqual(setA, setB) {
+  if (setA.size !== setB.size) {
+    return false;
+  }
+  for (const item of setA) {
+    if (!setB.has(item)) {
+      return false;
+    }
+  }
+  return true;
 }

@@ -5,6 +5,7 @@ import {
   getAwsRegion,
   getJwtSecretKey,
   getJwtMinutesToLive,
+  getShortUrlRange,
 } from "../e2e/common/aws";
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
 
@@ -22,6 +23,12 @@ before(() => {
             Cypress.env("jwtSecretKey", jwtSecretKey);
             getJwtMinutesToLive(ssmClient).then((jwtMinuesToLive) => {
               Cypress.env("jwtMinutesToLive", jwtMinuesToLive);
+              getShortUrlRange(ssmClient).then(
+                ([minShortUrlBase10, maxShortUrlBase10]) => {
+                  Cypress.env("minShortUrlBase10", minShortUrlBase10);
+                  Cypress.env("maxShortUrlBase10", maxShortUrlBase10);
+                }
+              );
             });
           });
         });
