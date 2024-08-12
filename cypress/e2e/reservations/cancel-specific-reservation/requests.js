@@ -5,6 +5,8 @@ import { RESERVATIONS_BASE_URL } from "../../common/constants";
 import { reserveSpecificShortUrl } from "../reserve-specific-short-url/requests";
 import { getAdminJwtToken } from "../../users/get-admin-jwt-token/requests";
 import { login } from "../../users/login/requests";
+import { deleteAllUsers } from "../../users/delete-all-users/requests";
+import { signupAllUsers } from "../../users/signup/requests";
 
 export function cancelSpecificReservationWithNoAuthHeader() {
   return cy.request({
@@ -37,19 +39,23 @@ export function cancelSpecificReservationWithInvalidJwtToken() {
 }
 
 export function cancelSpecificReservationWithValidButNonAdminJwtToken() {
-  return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
-    (response) => {
-      const nonAdminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "PATCH",
-        url: `${RESERVATIONS_BASE_URL}/cancel/specific/bx3raV`,
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
-        },
-        failOnStatusCode: false,
-      });
-    }
-  );
+  return deleteAllUsers().then(() => {
+    signupAllUsers().then(() => {
+      login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
+        (response) => {
+          const nonAdminJwtToken = response.body.jwtToken;
+          cy.request({
+            method: "PATCH",
+            url: `${RESERVATIONS_BASE_URL}/cancel/specific/bx3raV`,
+            headers: {
+              Authorization: `Bearer ${nonAdminJwtToken}`,
+            },
+            failOnStatusCode: false,
+          });
+        }
+      );
+    });
+  });
 }
 
 export function cancelSpecificReservationForNonExistentShortUrl() {

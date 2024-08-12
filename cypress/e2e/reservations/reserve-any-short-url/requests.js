@@ -2,24 +2,25 @@
 
 import { USERS } from "../../common/constants";
 import { RESERVATIONS_BASE_URL } from "../../common/constants";
-import { cancelSpecificReservationForShortUrl } from "../cancel-specific-reservation/requests";
+import { cancelAllReservations } from "../cancel-all-reservations/requests";
 import { getAdminJwtToken } from "../../users/get-admin-jwt-token/requests";
 import { login } from "../../users/login/requests";
 import { deleteAllUsers } from "../../users/delete-all-users/requests";
+import { reserveAllShortUrls } from "../reserve-all-short-urls/requests";
 import { signupAllUsers } from "../../users/signup/requests";
 
-export function reserveSpecificShortUrlWithNoAuthHeader() {
+export function reserveAnyShortUrlWithNoAuthHeader() {
   return cy.request({
     method: "PATCH",
-    url: `${RESERVATIONS_BASE_URL}/reserve/specific/bx3raV`,
+    url: `${RESERVATIONS_BASE_URL}/reserve/any`,
     failOnStatusCode: false,
   });
 }
 
-export function reserveSpecificShortUrlWithWrongKindOfAuthHeader() {
+export function reserveAnyShortUrlWithWrongKindOfAuthHeader() {
   return cy.request({
     method: "PATCH",
-    url: `${RESERVATIONS_BASE_URL}/reserve/specific/bx3raV`,
+    url: `${RESERVATIONS_BASE_URL}/reserve/any`,
     headers: {
       Authorization: "Basic " + btoa("username:password"),
     },
@@ -27,10 +28,10 @@ export function reserveSpecificShortUrlWithWrongKindOfAuthHeader() {
   });
 }
 
-export function reserveSpecificShortUrlWithInvalidJwtToken() {
+export function reserveAnyShortUrlWithInvalidJwtToken() {
   return cy.request({
     method: "PATCH",
-    url: `${RESERVATIONS_BASE_URL}/reserve/specific/bx3raV`,
+    url: `${RESERVATIONS_BASE_URL}/reserve/any`,
     headers: {
       Authorization: "Bearer " + "invalid.jwt.token",
     },
@@ -38,7 +39,7 @@ export function reserveSpecificShortUrlWithInvalidJwtToken() {
   });
 }
 
-export function reserveSpecificShortUrlWithValidButNonAdminJwtToken() {
+export function reserveAnyShortUrlWithValidButNonAdminJwtToken() {
   return deleteAllUsers().then(() => {
     signupAllUsers().then(() => {
       login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
@@ -46,7 +47,7 @@ export function reserveSpecificShortUrlWithValidButNonAdminJwtToken() {
           const nonAdminJwtToken = response.body.jwtToken;
           cy.request({
             method: "PATCH",
-            url: `${RESERVATIONS_BASE_URL}/reserve/specific/bx3raV`,
+            url: `${RESERVATIONS_BASE_URL}/reserve/any`,
             headers: {
               Authorization: `Bearer ${nonAdminJwtToken}`,
             },
@@ -58,30 +59,24 @@ export function reserveSpecificShortUrlWithValidButNonAdminJwtToken() {
   });
 }
 
-export function reserveSpecificNonExistentShortUrl() {
-  return reserveSpecificShortUrl("hello");
-}
-
-export function reserveSpecificAlreadyReservedShortUrl() {
-  return cancelSpecificReservationForShortUrl("bx3raV").then(() => {
-    reserveSpecificShortUrl("bx3raV").then((response) => {
-      reserveSpecificShortUrl("bx3raV");
-    });
+export function reserveAnyShortUrlWhenNoneAreAvailable() {
+  return reserveAllShortUrls().then(() => {
+    reserveAnyShortUrl();
   });
 }
 
-export function reserveSpecificAvailableShortUrl() {
-  return cancelSpecificReservationForShortUrl("bx3raV").then(() => {
-    reserveSpecificShortUrl("bx3raV");
+export function reserveAnyShortUrlWhenOneIsAvailable() {
+  return cancelAllReservations().then(() => {
+    reserveAnyShortUrl();
   });
 }
 
-export function reserveSpecificShortUrl(shortUrl) {
+export function reserveAnyShortUrl() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     cy.request({
       method: "PATCH",
-      url: `${RESERVATIONS_BASE_URL}/reserve/specific/${shortUrl}`,
+      url: `${RESERVATIONS_BASE_URL}/reserve/any`,
       headers: {
         Authorization: `Bearer ${adminJwtToken}`,
       },
