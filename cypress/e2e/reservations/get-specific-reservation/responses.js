@@ -62,4 +62,3 @@ export function expectSuccessResponse(response) {
   expect(response.body.shortUrlReservation).to.have.property("isAvailable");
   expect(response.body.shortUrlReservation).to.have.property("version");
 }
-// ====> response = {"status":{"status":"SUCCESS","message":"Short URL 'bx3raV' successfully retrieved"},"shortUrlReservation":{"shortUrl":"bx3raV","isAvailable":"bx3raV","version":5}}
