@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+export const MAPPINGS_BASE_URL =
+  "https://test.richarddklein.com/short-url/mappings";
 export const RESERVATIONS_BASE_URL =
   "https://test.richarddklein.com/short-url/reservations";
 export const USERS_BASE_URL = "https://test.richarddklein.com/short-url/users";
