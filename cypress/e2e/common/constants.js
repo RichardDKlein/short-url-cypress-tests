@@ -16,6 +16,39 @@ export const HTTP_STATUS_CODES = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
+export const MAPPINGS = {
+  GOOGLE_1: {
+    username: "google",
+    shortUrl: "google1",
+    longUrl: "https://www.google.com",
+  },
+  GOOGLE_2: {
+    username: "google",
+    shortUrl: "google2",
+    longUrl: "https://www.google.com",
+  },
+  YOUTUBE_1: {
+    username: "youtube",
+    shortUrl: "youtube1",
+    longUrl: "https://www.youtube.com",
+  },
+  YOUTUBE_2: {
+    username: "youtube",
+    shortUrl: "youtube2",
+    longUrl: "https://www.youtube.com",
+  },
+  FACEBOOK_1: {
+    username: "facebook",
+    shortUrl: "facebook1",
+    longUrl: "https://www.facebook.com",
+  },
+  FACEBOOK_2: {
+    username: "facebook",
+    shortUrl: "facebook2",
+    longUrl: "https://www.facebook.com",
+  },
+};
+
 export const USERS = {
   JOHN_DOE: {
     username: "johndoe",
