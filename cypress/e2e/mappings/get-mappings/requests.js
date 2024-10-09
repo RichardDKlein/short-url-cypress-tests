@@ -40,6 +40,11 @@ export function getMappingsWithInvalidJwtToken() {
     headers: {
       Authorization: "Bearer " + "invalid.jwt.token",
     },
+    body: {
+      username: "*",
+      shortUrl: "*",
+      longUrl: "*",
+    },
     failOnStatusCode: false,
   });
 }
@@ -64,13 +69,13 @@ export function getAllMappingsWithSpecifiedAdminJwtToken(adminJwtToken) {
   return cy.request({
     method: "GET",
     url: `${MAPPINGS_BASE_URL}/get-mappings`,
+    headers: {
+      Authorization: `Bearer ${adminJwtToken}`,
+    },
     body: {
       username: "*",
       shortUrl: "*",
       longUrl: "*",
-    },
-    headers: {
-      Authorization: `Bearer ${adminJwtToken}`,
     },
     failOnStatusCode: false,
   });

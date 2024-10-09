@@ -21,13 +21,13 @@ export function changePasswordWithWrongKindOfAuthHeader() {
   return cy.request({
     method: "PATCH",
     url: `${USERS_BASE_URL}/change-password`,
+    headers: {
+      Authorization: "Basic " + btoa("username:password"),
+    },
     body: {
       username: "isaac.newton",
       oldPassword: "isaac.newton.old.password",
       newPassword: "isaac.newton.new.password",
-    },
-    headers: {
-      Authorization: "Basic " + btoa("username:password"),
     },
     failOnStatusCode: false,
   });
@@ -37,13 +37,13 @@ export function changePasswordWithInvalidJwtToken() {
   return cy.request({
     method: "PATCH",
     url: `${USERS_BASE_URL}/change-password`,
+    headers: {
+      Authorization: "Bearer " + "invalid.jwt.token",
+    },
     body: {
       username: "isaac.newton",
       oldPassword: "isaac.newton.old.password",
       newPassword: "isaac.newton.new.password",
-    },
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
     },
     failOnStatusCode: false,
   });
@@ -56,13 +56,13 @@ export function changePasswordWithValidButNonAdminJwtToken() {
       cy.request({
         method: "PATCH",
         url: `${USERS_BASE_URL}/change-password`,
+        headers: {
+          Authorization: `Bearer ${nonAdminJwtToken}`,
+        },
         body: {
           username: "isaac.newton",
           oldPassword: "isaac.newton.old.password",
           newPassword: "isaac.newton.new.password",
-        },
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
         },
         failOnStatusCode: false,
       });
@@ -76,12 +76,12 @@ export function changePasswordWithMissingUsername() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         oldPassword: "isaac.newton.old.password",
         newPassword: "isaac.newton.new.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -94,13 +94,13 @@ export function changePasswordWithEmptyUsername() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "",
         oldPassword: "isaac.newton.old.password",
         newPassword: "isaac.newton.new.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -113,13 +113,13 @@ export function changePasswordWithBlankUsername() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "   ",
         oldPassword: "isaac.newton.old.password",
         newPassword: "isaac.newton.new.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -132,12 +132,12 @@ export function changePasswordWithMissingOldPassword() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         newPassword: "isaac.newton.new.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -150,13 +150,13 @@ export function changePasswordWithEmptyOldPassword() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         oldPassword: "",
         newPassword: "isaac.newton.new.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -169,13 +169,13 @@ export function changePasswordWithBlankOldPassword() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         oldPassword: "   ",
         newPassword: "isaac.newton.new.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -188,12 +188,12 @@ export function changePasswordWithMissingNewPassword() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         oldPassword: "isaac.newton.old.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -206,13 +206,13 @@ export function changePasswordWithEmptyNewPassword() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         oldPassword: "isaac.newton.old.password",
         newPassword: "",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -225,13 +225,13 @@ export function changePasswordWithBlankNewPassword() {
     cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         oldPassword: "isaac.newton.old.password",
         newPassword: "   ",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -278,10 +278,10 @@ export function changePassword(username, oldPassword, newPassword) {
     return cy.request({
       method: "PATCH",
       url: `${USERS_BASE_URL}/change-password`,
-      body: { username, oldPassword, newPassword },
       headers: {
         Authorization: "Bearer " + adminJwtToken,
       },
+      body: { username, oldPassword, newPassword },
       failOnStatusCode: false,
     });
   });

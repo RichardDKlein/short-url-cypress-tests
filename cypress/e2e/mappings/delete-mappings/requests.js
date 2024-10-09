@@ -12,13 +12,13 @@ export function deleteAllMappingsWithValidAdminJwtToken() {
     cy.request({
       method: "DELETE",
       url: `${MAPPINGS_BASE_URL}/delete-mappings`,
+      headers: {
+        Authorization: "Bearer " + adminJwtToken,
+      },
       body: {
         username: "*",
         shortUrl: "*",
         longUrl: "*",
-      },
-      headers: {
-        Authorization: "Bearer " + adminJwtToken,
       },
       failOnStatusCode: false,
     });

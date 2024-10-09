@@ -25,13 +25,13 @@ export function createMappingWithWrongKindOfAuthHeader() {
   return cy.request({
     method: "POST",
     url: `${MAPPINGS_BASE_URL}/create-mapping`,
+    headers: {
+      Authorization: "Basic " + btoa("username:password"),
+    },
     body: {
       username: "isaac.newton",
       shortUrl: "shorturl",
       longUrl: "https://www.longurl.com",
-    },
-    headers: {
-      Authorization: "Basic " + btoa("username:password"),
     },
     failOnStatusCode: false,
   });
@@ -41,13 +41,13 @@ export function createMappingWithInvalidJwtToken() {
   return cy.request({
     method: "POST",
     url: `${MAPPINGS_BASE_URL}/create-mapping`,
+    headers: {
+      Authorization: "Bearer " + "invalid.jwt.token",
+    },
     body: {
       username: "isaac.newton",
       shortUrl: "shorturl",
       longUrl: "https://www.longurl.com",
-    },
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
     },
     failOnStatusCode: false,
   });
@@ -62,13 +62,13 @@ export function createMappingWithValidButNonAdminJwtToken() {
           cy.request({
             method: "POST",
             url: `${MAPPINGS_BASE_URL}/create-mapping`,
+            headers: {
+              Authorization: `Bearer ${nonAdminJwtToken}`,
+            },
             body: {
               username: "isaac.newton",
               shortUrl: "shorturl",
               longUrl: "https://www.longurl.com",
-            },
-            headers: {
-              Authorization: `Bearer ${nonAdminJwtToken}`,
             },
             failOnStatusCode: false,
           });
@@ -84,12 +84,12 @@ export function createMappingWithMissingUsername() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         shortUrl: "shorturl",
         longUrl: "https://www.longurl.com",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -102,13 +102,13 @@ export function createMappingWithEmptyUsername() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "",
         shortUrl: "shorturl",
         longUrl: "https://www.longurl.com",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -121,13 +121,13 @@ export function createMappingWithBlankUsername() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "   ",
         shortUrl: "shorturl",
         longUrl: "https://www.longurl.com",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -140,12 +140,12 @@ export function createMappingWithMissingShortUrl() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         longUrl: "https://www.longurl.com",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -158,13 +158,13 @@ export function createMappingWithEmptyShortUrl() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         shortUrl: "",
         longUrl: "https://www.longurl.com",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -177,13 +177,13 @@ export function createMappingWithBlankShortUrl() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         shortUrl: "   ",
         longUrl: "https://www.longurl.com",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -196,12 +196,12 @@ export function createMappingWithMissingLongUrl() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         shortUrl: "shorturl",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -214,13 +214,13 @@ export function createMappingWithEmptyLongUrl() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         shortUrl: "shorturl",
         longUrl: "",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -233,13 +233,13 @@ export function createMappingWithBlankLongUrl() {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         shortUrl: "shorturl",
         longUrl: "   ",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -279,10 +279,10 @@ export function createMapping(mapping) {
     cy.request({
       method: "POST",
       url: `${MAPPINGS_BASE_URL}/create-mapping`,
-      body: mapping,
       headers: {
         Authorization: "Bearer " + adminJwtToken,
       },
+      body: mapping,
       failOnStatusCode: false,
     });
   });

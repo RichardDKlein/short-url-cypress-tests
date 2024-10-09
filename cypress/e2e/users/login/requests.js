@@ -19,12 +19,12 @@ export function loginWithWrongKindOfAuthHeader() {
   return cy.request({
     method: "POST",
     url: `${USERS_BASE_URL}/login`,
+    headers: {
+      Authorization: "Basic " + btoa("username:password"),
+    },
     body: {
       username: "isaac.newton",
       password: "isaac.newton.password",
-    },
-    headers: {
-      Authorization: "Basic " + btoa("username:password"),
     },
     failOnStatusCode: false,
   });
@@ -34,12 +34,12 @@ export function loginWithInvalidJwtToken() {
   return cy.request({
     method: "POST",
     url: `${USERS_BASE_URL}/login`,
+    headers: {
+      Authorization: "Bearer " + "invalid.jwt.token",
+    },
     body: {
       username: "isaac.newton",
       password: "isaac.newton.password",
-    },
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
     },
     failOnStatusCode: false,
   });
@@ -52,12 +52,12 @@ export function loginWithValidButNonAdminJwtToken() {
       cy.request({
         method: "POST",
         url: `${USERS_BASE_URL}/login`,
+        headers: {
+          Authorization: `Bearer ${nonAdminJwtToken}`,
+        },
         body: {
           username: "isaac.newton",
           password: "isaac.newton.password",
-        },
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
         },
         failOnStatusCode: false,
       });
@@ -71,11 +71,11 @@ export function loginWithMissingUsername() {
     cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/login`,
-      body: {
-        password: "isaac.newton.password",
-      },
       headers: {
         Authorization: `Bearer ${adminJwtToken}`,
+      },
+      body: {
+        password: "isaac.newton.password",
       },
       failOnStatusCode: false,
     });
@@ -88,12 +88,12 @@ export function loginWithEmptyUsername() {
     cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/login`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "",
         password: "isaac.newton.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -106,12 +106,12 @@ export function loginWithBlankUsername() {
     cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/login`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "   ",
         password: "isaac.newton.password",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -124,11 +124,11 @@ export function loginWithMissingPassword() {
     cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/login`,
-      body: {
-        username: "isaac.newton",
-      },
       headers: {
         Authorization: `Bearer ${adminJwtToken}`,
+      },
+      body: {
+        username: "isaac.newton",
       },
       failOnStatusCode: false,
     });
@@ -141,12 +141,12 @@ export function loginWithEmptyPassword() {
     cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/login`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         password: "",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -159,12 +159,12 @@ export function loginWithBlankPassword() {
     cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/login`,
+      headers: {
+        Authorization: `Bearer ${adminJwtToken}`,
+      },
       body: {
         username: "isaac.newton",
         password: "   ",
-      },
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
       },
       failOnStatusCode: false,
     });
@@ -193,10 +193,10 @@ export function login(username, password) {
     return cy.request({
       method: "POST",
       url: `${USERS_BASE_URL}/login`,
-      body: { username, password },
       headers: {
         Authorization: "Bearer " + adminJwtToken,
       },
+      body: { username, password },
       failOnStatusCode: false,
     });
   });
