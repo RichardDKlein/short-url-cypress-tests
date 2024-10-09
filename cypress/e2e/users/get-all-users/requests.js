@@ -38,14 +38,7 @@ export function getAllUsersWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "GET",
-        url: `${USERS_BASE_URL}/all`,
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
-        },
-        failOnStatusCode: false,
-      });
+      getAllUsersWithSpecifiedAdminJwtToken(nonAdminJwtToken);
     }
   );
 }
