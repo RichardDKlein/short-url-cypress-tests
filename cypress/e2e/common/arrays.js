@@ -29,3 +29,17 @@ export function areObjectArraysEqual(arr1, arr2) {
 
   return true;
 }
+
+/**
+ * Subtract two arrays of objects, i.e. return an array that contains
+ * all the objects in the first array that are NOT in the second array.
+ * @param {[object]} arr1 - The first array.
+ * @param {[object]} arr2 - The second array.
+ * @returns {[object]} - The array arr1 - arr2.
+ */
+export function subtractObjectArrays(arr1, arr2) {
+  return arr1.filter(
+    (obj1) =>
+      !arr2.some((obj2) => JSON.stringify(obj1) === JSON.stringify(obj2))
+  );
+}
