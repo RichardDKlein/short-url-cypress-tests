@@ -8,6 +8,7 @@ export const USERS_BASE_URL = "https://test.richarddklein.com/short-url/users";
 
 export const HTTP_STATUS_CODES = {
   OK: 200,
+  FOUND: 302,
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
   FORBIDDEN: 403,
@@ -46,6 +47,11 @@ export const MAPPINGS = {
     username: "facebook",
     shortUrl: "facebook2",
     longUrl: "https://www.facebook.com",
+  },
+  BAD_LONG_URL_SYNTAX: {
+    username: "yahoo",
+    shortUrl: "yahoo1",
+    longUrl: "https://bad long url syntax",
   },
 };
 
