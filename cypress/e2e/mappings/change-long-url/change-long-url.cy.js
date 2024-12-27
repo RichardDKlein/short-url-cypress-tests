@@ -28,7 +28,7 @@ import {
   expectSuccessResponse,
 } from "./responses";
 
-describe("Test the `PATCH /short-url/users/change-long-url` REST endpoint", () => {
+describe("Test the `PATCH /short-url/mappings/change-long-url` REST endpoint", () => {
   beforeEach(() => {
     deleteAllMappings().then(() => {
       createAllMappings();
