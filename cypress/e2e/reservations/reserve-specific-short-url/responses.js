@@ -10,10 +10,10 @@ export const RESERVE_SPECIFIC_SHORT_URL_RESPONSES = {
       message: "Short URL '${shortUrl}' does not exist",
     },
   },
-  SHORT_URL_ALREADY_RESERVED: {
+  SHORT_URL_ALREADY_TAKEN: {
     httpStatus: HTTP_STATUS_CODES.CONFLICT,
     response: {
-      status: "SHORT_URL_ALREADY_RESERVED",
+      status: "SHORT_URL_ALREADY_TAKEN",
       message: "Short URL '${shortUrl}' has already been reserved",
     },
   },
@@ -43,10 +43,10 @@ export function expectNoSuchShortUrlResponse(response) {
 
 export function expectShortUrlAlreadyReservedResponse(response) {
   expect(response.status).to.eq(
-    RESERVE_SPECIFIC_SHORT_URL_RESPONSES.SHORT_URL_ALREADY_RESERVED.httpStatus
+    RESERVE_SPECIFIC_SHORT_URL_RESPONSES.SHORT_URL_ALREADY_TAKEN.httpStatus
   );
   var expectedResponse = {
-    ...RESERVE_SPECIFIC_SHORT_URL_RESPONSES.SHORT_URL_ALREADY_RESERVED.response,
+    ...RESERVE_SPECIFIC_SHORT_URL_RESPONSES.SHORT_URL_ALREADY_TAKEN.response,
   };
   const shortUrl = response.body.message.match(/'(.*)'/g);
   expectedResponse.message = expectedResponse.message.replace(
