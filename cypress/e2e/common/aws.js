@@ -58,7 +58,7 @@ export function getJwtSecretKey(ssmClient) {
 
 export function getJwtMinutesToLive(ssmClient) {
   const command = new GetParameterCommand({
-    Name: "/shortUrl/users/jwtMinutesToLive",
+    Name: "/shortUrl/users/jwtMinutesToLiveTest",
     WithDecryption: true,
   });
   return cy.wrap(ssmClient.send(command)).then((response) => {
