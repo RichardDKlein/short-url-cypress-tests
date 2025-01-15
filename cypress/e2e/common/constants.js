@@ -1,10 +1,18 @@
 /// <reference types="cypress" />
 
-export const MAPPINGS_BASE_URL =
-  "https://test.richarddklein.com/short-url/mappings";
-export const RESERVATIONS_BASE_URL =
-  "https://test.richarddklein.com/short-url/reservations";
-export const USERS_BASE_URL = "https://test.richarddklein.com/short-url/users";
+const isLocal = false;
+
+export const USERS_BASE_URL = isLocal
+  ? "http://localhost:2000/short-url/users"
+  : "https://test.richarddklein.com/short-url/users";
+
+export const MAPPINGS_BASE_URL = isLocal
+  ? "http://localhost:4000/short-url/mappings"
+  : "https://test.richarddklein.com/short-url/mappings";
+
+export const RESERVATIONS_BASE_URL = isLocal
+  ? "http://localhost:6000/short-url/reservations"
+  : "https://test.richarddklein.com/short-url/reservations";
 
 export const HTTP_STATUS_CODES = {
   OK: 200,
