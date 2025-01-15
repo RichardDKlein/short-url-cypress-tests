@@ -19,18 +19,12 @@ before(() => {
         Cypress.env("adminUsername", adminUsername);
         getAdminPassword(ssmClient).then((adminPassword) => {
           Cypress.env("adminPassword", adminPassword);
-          getJwtSecretKey(ssmClient).then((jwtSecretKey) => {
-            Cypress.env("jwtSecretKey", jwtSecretKey);
-            getJwtMinutesToLive(ssmClient).then((jwtMinuesToLive) => {
-              Cypress.env("jwtMinutesToLive", jwtMinuesToLive);
-              getShortUrlRange(ssmClient).then(
-                ([minShortUrlBase10, maxShortUrlBase10]) => {
-                  Cypress.env("minShortUrlBase10", minShortUrlBase10);
-                  Cypress.env("maxShortUrlBase10", maxShortUrlBase10);
-                }
-              );
-            });
-          });
+          getShortUrlRange(ssmClient).then(
+            ([minShortUrlBase10, maxShortUrlBase10]) => {
+              Cypress.env("minShortUrlBase10", minShortUrlBase10);
+              Cypress.env("maxShortUrlBase10", maxShortUrlBase10);
+            }
+          );
         });
       });
     });

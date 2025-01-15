@@ -46,26 +46,6 @@ export function getAdminPassword(ssmClient) {
   });
 }
 
-export function getJwtSecretKey(ssmClient) {
-  const command = new GetParameterCommand({
-    Name: "/shortUrl/users/jwtSecretKey",
-    WithDecryption: true,
-  });
-  return cy.wrap(ssmClient.send(command)).then((response) => {
-    return response.Parameter.Value;
-  });
-}
-
-export function getJwtMinutesToLive(ssmClient) {
-  const command = new GetParameterCommand({
-    Name: "/shortUrl/users/jwtMinutesToLiveTest",
-    WithDecryption: true,
-  });
-  return cy.wrap(ssmClient.send(command)).then((response) => {
-    return response.Parameter.Value;
-  });
-}
-
 export function getShortUrlRange(ssmClient) {
   const command = new GetParameterCommand({
     Name: "/shortUrl/reservations/range",
