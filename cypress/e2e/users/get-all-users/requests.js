@@ -34,6 +34,16 @@ export function getAllUsersWithInvalidJwtToken() {
   });
 }
 
+export function getAllUsersWithValidButExpiredJwtToken() {
+  const saveJwtTimeToLiveTest = getJwtTimeToLiveTest();
+  setJwtTimeToLiveTest(0);
+  getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    getAllUsersWithSpecifiedAdminJwtToken(adminJwtToken);
+  });
+  setJwtTimeToLiveTest(saveJwtTimeToLiveTest);
+}
+
 export function getAllUsersWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {

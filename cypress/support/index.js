@@ -3,8 +3,6 @@ import {
   getAdminUsername,
   getAdminPassword,
   getAwsRegion,
-  getJwtSecretKey,
-  getJwtMinutesToLive,
   getShortUrlRange,
 } from "../e2e/common/aws";
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
