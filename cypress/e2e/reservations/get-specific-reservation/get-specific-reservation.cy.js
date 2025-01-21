@@ -10,7 +10,7 @@ import {
 } from "./requests";
 import {
   expectMissingBearerTokenAuthHeaderResponse,
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -35,7 +35,7 @@ describe("Test the `GET /short-url/reservations/specific/{short-url}` REST endpo
 
   it("has an invalid JWT token", () => {
     getSpecificReservationWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 

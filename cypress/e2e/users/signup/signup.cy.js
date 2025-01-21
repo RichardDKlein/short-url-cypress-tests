@@ -18,7 +18,7 @@ import {
 import { deleteAllUsers } from "../delete-all-users/requests";
 import {
   expectMissingBearerTokenAuthHeaderResponse,
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -49,7 +49,7 @@ describe("Test the `POST /short-url/users/signup` REST endpoint", () => {
 
   it("has an invalid JWT token", () => {
     signupWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 

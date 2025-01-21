@@ -23,7 +23,7 @@ import { signupAllUsers } from "../signup/requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
 import {
   expectMissingBearerTokenAuthHeaderResponse,
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -57,7 +57,7 @@ describe("Test the `PATCH /short-url/users/change-password` REST endpoint", () =
 
   it("has an invalid JWT token", () => {
     changePasswordWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 

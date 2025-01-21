@@ -11,7 +11,7 @@ import {
 } from "./requests";
 import {
   expectMissingBearerTokenAuthHeaderResponse,
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -37,7 +37,7 @@ describe("Test the `PATCH /short-url/reservations/cancel/specific/{short-url}` R
 
   it("has an invalid JWT token", () => {
     cancelSpecificReservationWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 

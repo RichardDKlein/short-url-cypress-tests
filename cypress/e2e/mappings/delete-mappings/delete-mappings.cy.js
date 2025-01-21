@@ -23,7 +23,7 @@ import {
 import { createAllMappings } from "../create-mapping/requests";
 import { deleteAllMappings } from "./requests";
 import {
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
@@ -59,7 +59,7 @@ describe("Test the `DELETE /short-url/mappings/delete-mappings` REST endpoint", 
 
   it("has an invalid JWT token", () => {
     deleteMappingsWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 

@@ -10,7 +10,7 @@ import {
 } from "./requests";
 import {
   expectMissingBearerTokenAuthHeaderResponse,
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -35,7 +35,7 @@ describe("Test the `PATCH /short-url/reservations/reserve/any` REST endpoint", (
 
   it("has an invalid JWT token", () => {
     reserveAnyShortUrlWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 

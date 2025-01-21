@@ -8,7 +8,7 @@ import {
   cancelAllReservationsWithValidAdminJwtToken,
 } from "./requests";
 import {
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
@@ -31,7 +31,7 @@ describe("Test the `PATCH /short-url/reservations/cancel/all` REST endpoint", ()
 
   it("has an invalid JWT token", () => {
     cancelAllReservationsWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 

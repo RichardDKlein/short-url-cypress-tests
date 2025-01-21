@@ -18,7 +18,7 @@ import { createAllMappings } from "../create-mapping/requests";
 import { deleteAllMappings } from "../delete-mappings/requests";
 import {
   expectMissingBearerTokenAuthHeaderResponse,
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -49,7 +49,7 @@ describe("Test the `PATCH /short-url/mappings/change-long-url` REST endpoint", (
 
   it("has an invalid JWT token", () => {
     changeLongUrlWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 

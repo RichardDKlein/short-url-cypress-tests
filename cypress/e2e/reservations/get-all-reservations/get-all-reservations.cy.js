@@ -8,7 +8,7 @@ import {
   getAllReservationsWithValidAdminJwtToken,
 } from "./requests";
 import {
-  expectInvalidJwtHeaderResponse,
+  expectInvalidJwtExceptionResponse,
   expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
@@ -31,7 +31,7 @@ describe("Test the `GET /short-url/reservations/all` REST endpoint", () => {
 
   it("has an invalid JWT token", () => {
     getAllReservationsWithInvalidJwtToken().then((response) => {
-      expectInvalidJwtHeaderResponse(response);
+      expectInvalidJwtExceptionResponse(response);
     });
   });
 
