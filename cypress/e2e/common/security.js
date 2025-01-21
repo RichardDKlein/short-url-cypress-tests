@@ -3,6 +3,13 @@
 import { HTTP_STATUS_CODES } from "./constants";
 
 export const SECURITY_RESPONSES = {
+  EXPIRED_JWT_EXCEPTION: {
+    httpStatus: HTTP_STATUS_CODES.UNAUTHORIZED,
+    response: {
+      status: "EXPIRED_JWT_EXCEPTION",
+      message: "JWT expired ${millisecs} milliseconds ago at ${timestamp}",
+    },
+  },
   INVALID_ADMIN_CREDENTIALS: {
     httpStatus: HTTP_STATUS_CODES.UNAUTHORIZED,
     response: {
@@ -51,13 +58,35 @@ export function expectInvalidAdminCredentialsResponse(response) {
   );
 }
 
-export function expectInvalidJwtHeaderResponse(response) {
+export function expectInvalidJwtExceptionResponse(response) {
   expect(response.status).to.eq(
     SECURITY_RESPONSES.INVALID_JWT_EXCEPTION.httpStatus
   );
   expect(JSON.stringify(response.body)).to.eq(
     JSON.stringify(SECURITY_RESPONSES.INVALID_JWT_EXCEPTION.response)
   );
+}
+
+export function expectExpiredJwtExceptionResponse(response) {
+  expect(response.status).to.eq(
+    SECURITY_RESPONSES.EXPIRED_JWT_EXCEPTION.httpStatus
+  );
+  var expectedResponse = {
+    ...SECURITY_RESPONSES.EXPIRED_JWT_EXCEPTION.response,
+  };
+  const regex = /(\d+) milliseconds ago at (\d{4}-.*)/;
+  const matches = expectedResponse.message.match(regex);
+  const millisecs = matches[1];
+  const timestamp = matches[2];
+  expectedResponse.message = expectedResponse.message.replace(
+    "${millisecs}",
+    millisecs
+  );
+  expectedResponse.message = expectedResponse.message.replace(
+    "${timestamp}",
+    timestamp
+  );
+  expect(JSON.stringify(response.body)).to.eq(JSON.stringify(expectedResponse));
 }
 
 export function expectMissingBasicAuthHeaderResponse(response) {
