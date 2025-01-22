@@ -1,6 +1,11 @@
 /// <reference types="cypress" />
 
 import { USERS_BASE_URL, USERS } from "../../common/constants";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 import { login } from "../login/requests";
 
@@ -46,6 +51,32 @@ export function changePasswordWithInvalidJwtToken() {
       newPassword: "isaac.newton.new.password",
     },
     failOnStatusCode: false,
+  });
+}
+
+export function changePasswordWithValidButExpiredJwtToken() {
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return changePasswordWithSpecifiedAdminJwtToken(
+            USERS.JOE_BLOW.username,
+            USERS.JOE_BLOW.password,
+            USERS.JOE_BLOW.password + "-NEW",
+            adminJwtToken
+          ).then((response) => {
+            return setJwtMinutesToLiveTest(
+              ssmClient,
+              saveJwtTimeToLiveTest
+            ).then(() => {
+              return response;
+            });
+          });
+        });
+      });
+    });
   });
 }
 
@@ -275,14 +306,28 @@ export function changePasswordOfAnExistingAdminUser() {
 export function changePassword(username, oldPassword, newPassword) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    return cy.request({
-      method: "PATCH",
-      url: `${USERS_BASE_URL}/change-password`,
-      headers: {
-        Authorization: "Bearer " + adminJwtToken,
-      },
-      body: { username, oldPassword, newPassword },
-      failOnStatusCode: false,
-    });
+    return changePasswordWithSpecifiedAdminJwtToken(
+      username,
+      oldPassword,
+      newPassword,
+      adminJwtToken
+    );
+  });
+}
+
+export function changePasswordWithSpecifiedAdminJwtToken(
+  username,
+  oldPassword,
+  newPassword,
+  adminJwtToken
+) {
+  return cy.request({
+    method: "PATCH",
+    url: `${USERS_BASE_URL}/change-password`,
+    headers: {
+      Authorization: "Bearer " + adminJwtToken,
+    },
+    body: { username, oldPassword, newPassword },
+    failOnStatusCode: false,
   });
 }
