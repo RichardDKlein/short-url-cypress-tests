@@ -1,6 +1,11 @@
 /// <reference types="cypress" />
 
 import { USERS, USERS_BASE_URL } from "../../common/constants";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
 import { login } from "../login/requests";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 
@@ -35,13 +40,26 @@ export function getAllUsersWithInvalidJwtToken() {
 }
 
 export function getAllUsersWithValidButExpiredJwtToken() {
-  const saveJwtTimeToLiveTest = getJwtTimeToLiveTest();
-  setJwtTimeToLiveTest(0);
-  getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    getAllUsersWithSpecifiedAdminJwtToken(adminJwtToken);
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return getAllUsersWithSpecifiedAdminJwtToken(adminJwtToken).then(
+            (response) => {
+              return setJwtMinutesToLiveTest(
+                ssmClient,
+                saveJwtTimeToLiveTest
+              ).then(() => {
+                return response;
+              });
+            }
+          );
+        });
+      });
+    });
   });
-  setJwtTimeToLiveTest(saveJwtTimeToLiveTest);
 }
 
 export function getAllUsersWithValidButNonAdminJwtToken() {

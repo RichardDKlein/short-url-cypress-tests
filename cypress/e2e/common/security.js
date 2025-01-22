@@ -74,8 +74,8 @@ export function expectExpiredJwtExceptionResponse(response) {
   var expectedResponse = {
     ...SECURITY_RESPONSES.EXPIRED_JWT_EXCEPTION.response,
   };
-  const regex = /(\d+) milliseconds ago at (\d{4}-.*)/;
-  const matches = expectedResponse.message.match(regex);
+  const regex = /JWT expired (\d+) milliseconds ago at (\d{4}-.*)/;
+  const matches = response.body.message.match(regex);
   const millisecs = matches[1];
   const timestamp = matches[2];
   expectedResponse.message = expectedResponse.message.replace(
