@@ -1,6 +1,10 @@
 /// <reference types="cypress" />
 
-import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
+import {
+  SSMClient,
+  GetParameterCommand,
+  PutParameterCommand,
+} from "@aws-sdk/client-ssm";
 
 export function getAwsRegion() {
   const awsConfigFilePath = `${Cypress.env("HOME")}/.aws/config`;
@@ -53,6 +57,19 @@ export function getJwtMinutesToLiveTest(ssmClient) {
   });
   return cy.wrap(ssmClient.send(command)).then((response) => {
     return response.Parameter.Value;
+  });
+}
+
+export function setJwtMinutesToLiveTest(ssmClient, jwtMinutesToLiveTest) {
+  cy.log(`Setting the JWT minutes to live to ${jwtMinutesToLiveTest}`);
+  const command = new PutParameterCommand({
+    Name: "/shortUrl/users/jwtMinutesToLiveTest",
+    Value: jwtMinutesToLiveTest.toString(),
+    Type: "String",
+    Overwrite: true,
+  });
+  return cy.wrap(ssmClient.send(command)).then(() => {
+    return jwtMinutesToLiveTest;
   });
 }
 
