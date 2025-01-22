@@ -29,14 +29,7 @@ export function getAllUsersWithWrongKindOfAuthHeader() {
 }
 
 export function getAllUsersWithInvalidJwtToken() {
-  return cy.request({
-    method: "GET",
-    url: `${USERS_BASE_URL}/all`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    failOnStatusCode: false,
-  });
+  return getAllUsersWithSpecifiedAdminJwtToken("invalid.jwt.token");
 }
 
 export function getAllUsersWithValidButExpiredJwtToken() {

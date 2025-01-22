@@ -5,13 +5,15 @@ import {
   deleteAllUsersWithNoAuthHeader,
   deleteAllUsersWithWrongKindOfAuthHeader,
   deleteAllUsersWithInvalidJwtToken,
+  deleteAllUsersWithValidButExpiredJwtToken,
   deleteAllUsersWithValidButNonAdminJwtToken,
   deleteAllUsersWithValidAdminJwtToken,
 } from "./requests";
 import { signupAllUsers } from "../signup/requests";
 import {
-  expectMissingBearerTokenAuthHeaderResponse,
+  expectExpiredJwtExceptionResponse,
   expectInvalidJwtExceptionResponse,
+  expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import { expectSuccessResponse } from "./responses";
@@ -38,6 +40,12 @@ describe("Test the `DELETE /short-url/users/all` REST endpoint", () => {
   it("has an invalid JWT token", () => {
     deleteAllUsersWithInvalidJwtToken().then((response) => {
       expectInvalidJwtExceptionResponse(response);
+    });
+  });
+
+  it("has a valid but expired JWT token", () => {
+    deleteAllUsersWithValidButExpiredJwtToken().then((response) => {
+      expectExpiredJwtExceptionResponse(response);
     });
   });
 

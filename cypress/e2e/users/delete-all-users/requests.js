@@ -1,9 +1,13 @@
 /// <reference types="cypress" />
 
 import { USERS_BASE_URL, USERS } from "../../common/constants";
-import { getAdminJwtTokenWithBasicAuthHeader } from "../get-admin-jwt-token/requests";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
+import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 import { login } from "../login/requests";
-import { expectSuccessResponse } from "./responses";
 
 export function deleteAllUsersWithNoAuthHeader() {
   return cy.request({
@@ -25,13 +29,29 @@ export function deleteAllUsersWithWrongKindOfAuthHeader() {
 }
 
 export function deleteAllUsersWithInvalidJwtToken() {
-  return cy.request({
-    method: "DELETE",
-    url: `${USERS_BASE_URL}/all`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    failOnStatusCode: false,
+  return deleteAllUsersWithSpecifiedAdminJwtToken("invalid.jwt.token");
+}
+
+export function deleteAllUsersWithValidButExpiredJwtToken() {
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return deleteAllUsersWithSpecifiedAdminJwtToken(adminJwtToken).then(
+            (response) => {
+              return setJwtMinutesToLiveTest(
+                ssmClient,
+                saveJwtTimeToLiveTest
+              ).then(() => {
+                return response;
+              });
+            }
+          );
+        });
+      });
+    });
   });
 }
 
@@ -39,32 +59,26 @@ export function deleteAllUsersWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "DELETE",
-        url: `${USERS_BASE_URL}/all`,
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
-        },
-        failOnStatusCode: false,
-      });
+      return deleteAllUsersWithSpecifiedAdminJwtToken(nonAdminJwtToken);
     }
   );
 }
 
 export function deleteAllUsersWithValidAdminJwtToken() {
-  return getAdminJwtTokenWithBasicAuthHeader(
-    Cypress.env("adminUsername"),
-    Cypress.env("adminPassword")
-  ).then((response) => {
+  return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${USERS_BASE_URL}/all`,
-      headers: {
-        Authorization: "Bearer " + adminJwtToken,
-      },
-      failOnStatusCode: false,
-    });
+    return deleteAllUsersWithSpecifiedAdminJwtToken(adminJwtToken);
+  });
+}
+
+export function deleteAllUsersWithSpecifiedAdminJwtToken(adminJwtToken) {
+  return cy.request({
+    method: "DELETE",
+    url: `${USERS_BASE_URL}/all`,
+    headers: {
+      Authorization: "Bearer " + adminJwtToken,
+    },
+    failOnStatusCode: false,
   });
 }
 
