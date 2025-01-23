@@ -1,7 +1,11 @@
 /// <reference types="cypress" />
 
-import { USERS } from "../../common/constants";
-import { USERS_BASE_URL } from "../../common/constants";
+import { USERS, USERS_BASE_URL } from "../../common/constants";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 import { getAllUsers } from "../get-all-users/requests";
 import { login } from "../login/requests";
@@ -34,17 +38,35 @@ export function signupWithWrongKindOfAuthHeader() {
 }
 
 export function signupWithInvalidJwtToken() {
-  return cy.request({
-    method: "POST",
-    url: `${USERS_BASE_URL}/signup`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    body: {
-      username: "isaac.newton",
-      password: "isaac.newton.password",
-    },
-    failOnStatusCode: false,
+  return signupUserWithSpecifiedAdminJwtToken(
+    "isaac.newton",
+    "isaac.newton.password",
+    "invalid.jwt.token"
+  );
+}
+
+export function signupWithValidButExpiredJwtToken() {
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return signupUserWithSpecifiedAdminJwtToken(
+            USERS.JOE_BLOW.username,
+            USERS.JOE_BLOW.password,
+            adminJwtToken
+          ).then((response) => {
+            return setJwtMinutesToLiveTest(
+              ssmClient,
+              saveJwtTimeToLiveTest
+            ).then(() => {
+              return response;
+            });
+          });
+        });
+      });
+    });
   });
 }
 
@@ -52,18 +74,11 @@ export function signupWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "POST",
-        url: `${USERS_BASE_URL}/signup`,
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
-        },
-        body: {
-          username: "isaac.newton",
-          password: "isaac.newton.password",
-        },
-        failOnStatusCode: false,
-      });
+      return signupUserWithSpecifiedAdminJwtToken(
+        USERS.JOHN_DOE.username,
+        USERS.JOHN_DOE.password,
+        nonAdminJwtToken
+      );
     }
   );
 }
@@ -191,30 +206,39 @@ export function signupAnExistingUser() {
           }
         }
       }
-      signupUser(existingUser);
+      signupUser(existingUser.username, existingUser.password);
     });
   });
 }
 
 export function signupNewUser() {
-  return signupUser({
-    username: "isaac.newton",
-    password: "isaac.newton.password",
+  return signupUser("isaac.newton", "isaac.newton.password");
+}
+
+export function signupUser(username, password) {
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    return signupUserWithSpecifiedAdminJwtToken(
+      username,
+      password,
+      adminJwtToken
+    );
   });
 }
 
-export function signupUser(user) {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/signup`,
-      headers: {
-        Authorization: "Bearer " + adminJwtToken,
-      },
-      body: user,
-      failOnStatusCode: false,
-    });
+export function signupUserWithSpecifiedAdminJwtToken(
+  username,
+  password,
+  adminJwtToken
+) {
+  return cy.request({
+    method: "POST",
+    url: `${USERS_BASE_URL}/signup`,
+    headers: {
+      Authorization: "Bearer " + adminJwtToken,
+    },
+    body: { username, password },
+    failOnStatusCode: false,
   });
 }
 
@@ -228,7 +252,7 @@ function signupUsersRecursively(userEntries, index) {
     return null;
   }
   const [key, user] = userEntries[index];
-  return signupUser(user).then(() => {
+  return signupUser(user.username, user.password).then(() => {
     signupUsersRecursively(userEntries, index + 1);
   });
 }
