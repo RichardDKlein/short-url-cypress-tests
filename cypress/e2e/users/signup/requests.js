@@ -39,8 +39,7 @@ export function signupWithWrongKindOfAuthHeader() {
 
 export function signupWithInvalidJwtToken() {
   return signupUserWithSpecifiedAdminJwtToken(
-    "isaac.newton",
-    "isaac.newton.password",
+    { username: "isaac.newton", password: "isaac.newton.password" },
     "invalid.jwt.token"
   );
 }
@@ -53,8 +52,10 @@ export function signupWithValidButExpiredJwtToken() {
         return getAdminJwtToken().then((response) => {
           const adminJwtToken = response.body.jwtToken;
           return signupUserWithSpecifiedAdminJwtToken(
-            USERS.JOE_BLOW.username,
-            USERS.JOE_BLOW.password,
+            {
+              username: USERS.JOE_BLOW.username,
+              password: USERS.JOE_BLOW.password,
+            },
             adminJwtToken
           ).then((response) => {
             return setJwtMinutesToLiveTest(
@@ -75,8 +76,10 @@ export function signupWithValidButNonAdminJwtToken() {
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
       return signupUserWithSpecifiedAdminJwtToken(
-        USERS.JOHN_DOE.username,
-        USERS.JOHN_DOE.password,
+        {
+          username: USERS.JOHN_DOE.username,
+          password: USERS.JOHN_DOE.password,
+        },
         nonAdminJwtToken
       );
     }
@@ -206,38 +209,33 @@ export function signupAnExistingUser() {
           }
         }
       }
-      signupUser(existingUser.username, existingUser.password);
+      signupUser(existingUser);
     });
   });
 }
 
 export function signupNewUser() {
-  return signupUser("isaac.newton", "isaac.newton.password");
-}
-
-export function signupUser(username, password) {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return signupUserWithSpecifiedAdminJwtToken(
-      username,
-      password,
-      adminJwtToken
-    );
+  return signupUser({
+    username: "isaac.newton",
+    password: "isaac.newton.password",
   });
 }
 
-export function signupUserWithSpecifiedAdminJwtToken(
-  username,
-  password,
-  adminJwtToken
-) {
+export function signupUser(user) {
+  return getAdminJwtToken().then((response) => {
+    const adminJwtToken = response.body.jwtToken;
+    return signupUserWithSpecifiedAdminJwtToken(user, adminJwtToken);
+  });
+}
+
+export function signupUserWithSpecifiedAdminJwtToken(user, adminJwtToken) {
   return cy.request({
     method: "POST",
     url: `${USERS_BASE_URL}/signup`,
     headers: {
       Authorization: "Bearer " + adminJwtToken,
     },
-    body: { username, password },
+    body: user,
     failOnStatusCode: false,
   });
 }
@@ -252,7 +250,7 @@ function signupUsersRecursively(userEntries, index) {
     return null;
   }
   const [key, user] = userEntries[index];
-  return signupUser(user.username, user.password).then(() => {
+  return signupUser(user).then(() => {
     signupUsersRecursively(userEntries, index + 1);
   });
 }

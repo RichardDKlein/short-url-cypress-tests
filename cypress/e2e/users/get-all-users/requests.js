@@ -59,7 +59,7 @@ export function getAllUsersWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      getAllUsersWithSpecifiedAdminJwtToken(nonAdminJwtToken);
+      return getAllUsersWithSpecifiedAdminJwtToken(nonAdminJwtToken);
     }
   );
 }
@@ -67,7 +67,7 @@ export function getAllUsersWithValidButNonAdminJwtToken() {
 export function getAllUsersWithValidAdminJwtToken() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    getAllUsersWithSpecifiedAdminJwtToken(adminJwtToken);
+    return getAllUsersWithSpecifiedAdminJwtToken(adminJwtToken);
   });
 }
 
