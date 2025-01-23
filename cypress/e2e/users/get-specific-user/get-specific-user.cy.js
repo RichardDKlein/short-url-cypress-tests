@@ -4,6 +4,7 @@ import {
   getSpecificUserWithNoAuthHeader,
   getSpecificUserWithWrongKindOfAuthHeader,
   getSpecificUserWithInvalidJwtToken,
+  getSpecificUserWithValidButExpiredJwtToken,
   getSpecificUserWithValidButNonAdminJwtToken,
   getSpecificUserForNonExistentUser,
   getSpecificUserForAnExistingUser,
@@ -11,8 +12,9 @@ import {
 import { signupAllUsers } from "../signup/requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
 import {
-  expectMissingBearerTokenAuthHeaderResponse,
+  expectExpiredJwtExceptionResponse,
   expectInvalidJwtExceptionResponse,
+  expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import { expectNoSuchUserResponse, expectSuccessResponse } from "./responses";
@@ -39,6 +41,12 @@ describe("Test the `GET /short-url/users/specific/{username}` REST endpoint", ()
   it("has an invalid JWT token", () => {
     getSpecificUserWithInvalidJwtToken().then((response) => {
       expectInvalidJwtExceptionResponse(response);
+    });
+  });
+
+  it("has a valid but expired JWT token", () => {
+    getSpecificUserWithValidButExpiredJwtToken().then((response) => {
+      expectExpiredJwtExceptionResponse(response);
     });
   });
 

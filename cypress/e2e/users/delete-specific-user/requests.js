@@ -29,14 +29,10 @@ export function deleteSpecificUserWithWrongKindOfAuthHeader() {
 }
 
 export function deleteSpecificUserWithInvalidJwtToken() {
-  return cy.request({
-    method: "DELETE",
-    url: `${USERS_BASE_URL}/specific/${USERS.JOE_BLOW.username}`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    failOnStatusCode: false,
-  });
+  return deleteSpecificUserWithSpecifiedAdminJwtToken(
+    USERS.JOE_BLOW.username,
+    "invalid.jwt.token"
+  );
 }
 
 export function deleteSpecificUserWithValidButExpiredJwtToken() {
@@ -93,9 +89,7 @@ export function deleteSpecificUser(username) {
     return deleteSpecificUserWithSpecifiedAdminJwtToken(
       username,
       adminJwtToken
-    ).then((response) => {
-      return response;
-    });
+    );
   });
 }
 
