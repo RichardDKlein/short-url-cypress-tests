@@ -108,8 +108,7 @@ export function signupWithEmptyUsername() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     return signupUserWithSpecifiedAdminJwtToken(
-      "",
-      "isaac.newton.password",
+      { username: "", password: "isaac.newton.password" },
       adminJwtToken
     );
   });
@@ -119,8 +118,7 @@ export function signupWithBlankUsername() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     return signupUserWithSpecifiedAdminJwtToken(
-      "   ",
-      "isaac.newton.password",
+      { username: "   ", password: "isaac.newton.password" },
       adminJwtToken
     );
   });
@@ -147,8 +145,7 @@ export function signupWithEmptyPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     return signupUserWithSpecifiedAdminJwtToken(
-      "isaac.newton",
-      "",
+      { username: "isaac.newton", password: "" },
       adminJwtToken
     );
   });
@@ -158,8 +155,7 @@ export function signupWithBlankPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
     return signupUserWithSpecifiedAdminJwtToken(
-      "isaac.newton",
-      "   ",
+      { username: "isaac.newton", password: "   " },
       adminJwtToken
     );
   });
