@@ -1,6 +1,11 @@
 /// <reference types="cypress" />
 
-import { USERS_BASE_URL, USERS } from "../../common/constants";
+import { USERS, USERS_BASE_URL } from "../../common/constants";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 
 export function loginWithNoAuthHeader() {
@@ -31,17 +36,35 @@ export function loginWithWrongKindOfAuthHeader() {
 }
 
 export function loginWithInvalidJwtToken() {
-  return cy.request({
-    method: "POST",
-    url: `${USERS_BASE_URL}/login`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    body: {
-      username: "isaac.newton",
-      password: "isaac.newton.password",
-    },
-    failOnStatusCode: false,
+  return loginWithSpecifiedAdminJwtToken(
+    "isaac.newton",
+    "isaac.newton.password",
+    "invalid.jwt.token"
+  );
+}
+
+export function loginWithValidButExpiredJwtToken() {
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return loginWithSpecifiedAdminJwtToken(
+            USERS.JOE_BLOW.username,
+            USERS.JOE_BLOW.password,
+            adminJwtToken
+          ).then((response) => {
+            return setJwtMinutesToLiveTest(
+              ssmClient,
+              saveJwtTimeToLiveTest
+            ).then(() => {
+              return response;
+            });
+          });
+        });
+      });
+    });
   });
 }
 
@@ -49,18 +72,11 @@ export function loginWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "POST",
-        url: `${USERS_BASE_URL}/login`,
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
-        },
-        body: {
-          username: "isaac.newton",
-          password: "isaac.newton.password",
-        },
-        failOnStatusCode: false,
-      });
+      return loginWithSpecifiedAdminJwtToken(
+        "isaac.newton",
+        "isaac.newton.password",
+        nonAdminJwtToken
+      );
     }
   );
 }
@@ -190,14 +206,22 @@ export function loginAnExistingAdminUser() {
 export function login(username, password) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    return cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/login`,
-      headers: {
-        Authorization: "Bearer " + adminJwtToken,
-      },
-      body: { username, password },
-      failOnStatusCode: false,
-    });
+    return loginWithSpecifiedAdminJwtToken(username, password, adminJwtToken);
+  });
+}
+
+export function loginWithSpecifiedAdminJwtToken(
+  username,
+  password,
+  adminJwtToken
+) {
+  return cy.request({
+    method: "POST",
+    url: `${USERS_BASE_URL}/login`,
+    headers: {
+      Authorization: "Bearer " + adminJwtToken,
+    },
+    body: { username, password },
+    failOnStatusCode: false,
   });
 }

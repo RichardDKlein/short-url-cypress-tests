@@ -4,6 +4,7 @@ import {
   loginWithNoAuthHeader,
   loginWithWrongKindOfAuthHeader,
   loginWithInvalidJwtToken,
+  loginWithValidButExpiredJwtToken,
   loginWithValidButNonAdminJwtToken,
   loginWithMissingUsername,
   loginWithEmptyUsername,
@@ -19,8 +20,9 @@ import {
 import { signupAllUsers } from "../signup/requests";
 import { deleteAllUsers } from "../delete-all-users/requests";
 import {
-  expectMissingBearerTokenAuthHeaderResponse,
+  expectExpiredJwtExceptionResponse,
   expectInvalidJwtExceptionResponse,
+  expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -54,6 +56,12 @@ describe("Test the `POST /short-url/users/login` REST endpoint", () => {
   it("has an invalid JWT token", () => {
     loginWithInvalidJwtToken().then((response) => {
       expectInvalidJwtExceptionResponse(response);
+    });
+  });
+
+  it("has a valid but expired JWT token", () => {
+    loginWithValidButExpiredJwtToken().then((response) => {
+      expectExpiredJwtExceptionResponse(response);
     });
   });
 

@@ -39,19 +39,12 @@ export function changePasswordWithWrongKindOfAuthHeader() {
 }
 
 export function changePasswordWithInvalidJwtToken() {
-  return cy.request({
-    method: "PATCH",
-    url: `${USERS_BASE_URL}/change-password`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    body: {
-      username: "isaac.newton",
-      oldPassword: "isaac.newton.old.password",
-      newPassword: "isaac.newton.new.password",
-    },
-    failOnStatusCode: false,
-  });
+  return changePasswordWithSpecifiedAdminJwtToken(
+    "isaac.newton",
+    "isaac.newton.old.password",
+    "isaac.newton.new.password",
+    "invalid.jwt.token"
+  );
 }
 
 export function changePasswordWithValidButExpiredJwtToken() {
@@ -84,19 +77,12 @@ export function changePasswordWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "PATCH",
-        url: `${USERS_BASE_URL}/change-password`,
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
-        },
-        body: {
-          username: "isaac.newton",
-          oldPassword: "isaac.newton.old.password",
-          newPassword: "isaac.newton.new.password",
-        },
-        failOnStatusCode: false,
-      });
+      return changePasswordWithSpecifiedAdminJwtToken(
+        "isaac.newton",
+        "isaac.newton.old.password",
+        "isaac.newton.new.password",
+        nonAdminJwtToken
+      );
     }
   );
 }
