@@ -108,38 +108,24 @@ export function changePasswordWithMissingUsername() {
 export function changePasswordWithEmptyUsername() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${USERS_BASE_URL}/change-password`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "",
-        oldPassword: "isaac.newton.old.password",
-        newPassword: "isaac.newton.new.password",
-      },
-      failOnStatusCode: false,
-    });
+    return changePasswordWithSpecifiedAdminJwtToken(
+      "",
+      "isaac.newton.old.password",
+      "isaac.newton.new.password",
+      adminJwtToken
+    );
   });
 }
 
 export function changePasswordWithBlankUsername() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${USERS_BASE_URL}/change-password`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "   ",
-        oldPassword: "isaac.newton.old.password",
-        newPassword: "isaac.newton.new.password",
-      },
-      failOnStatusCode: false,
-    });
+    return changePasswordWithSpecifiedAdminJwtToken(
+      "   ",
+      "isaac.newton.old.password",
+      "isaac.newton.new.password",
+      adminJwtToken
+    );
   });
 }
 
@@ -164,38 +150,24 @@ export function changePasswordWithMissingOldPassword() {
 export function changePasswordWithEmptyOldPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${USERS_BASE_URL}/change-password`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        oldPassword: "",
-        newPassword: "isaac.newton.new.password",
-      },
-      failOnStatusCode: false,
-    });
+    return changePasswordWithSpecifiedAdminJwtToken(
+      "isaac.newton",
+      "",
+      "isaac.newton.new.password",
+      adminJwtToken
+    );
   });
 }
 
 export function changePasswordWithBlankOldPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${USERS_BASE_URL}/change-password`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        oldPassword: "   ",
-        newPassword: "isaac.newton.new.password",
-      },
-      failOnStatusCode: false,
-    });
+    return changePasswordWithSpecifiedAdminJwtToken(
+      "isaac.newton",
+      "   ",
+      "isaac.newton.new.password",
+      adminJwtToken
+    );
   });
 }
 
@@ -220,38 +192,24 @@ export function changePasswordWithMissingNewPassword() {
 export function changePasswordWithEmptyNewPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${USERS_BASE_URL}/change-password`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        oldPassword: "isaac.newton.old.password",
-        newPassword: "",
-      },
-      failOnStatusCode: false,
-    });
+    return changePasswordWithSpecifiedAdminJwtToken(
+      "isaac.newton",
+      "isaac.newton.old.password",
+      "",
+      adminJwtToken
+    );
   });
 }
 
 export function changePasswordWithBlankNewPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${USERS_BASE_URL}/change-password`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        oldPassword: "isaac.newton.old.password",
-        newPassword: "   ",
-      },
-      failOnStatusCode: false,
-    });
+    return changePasswordWithSpecifiedAdminJwtToken(
+      "isaac.newton",
+      "isaac.newton.old.password",
+      "   ",
+      adminJwtToken
+    );
   });
 }
 

@@ -9,6 +9,7 @@ import {
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 import { getAllUsers } from "../get-all-users/requests";
 import { login } from "../login/requests";
+import { sign } from "jsonwebtoken";
 
 export function signupWithNoAuthHeader() {
   return cy.request({
@@ -106,36 +107,22 @@ export function signupWithMissingUsername() {
 export function signupWithEmptyUsername() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/signup`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "",
-        password: "isaac.newton.password",
-      },
-      failOnStatusCode: false,
-    });
+    return signupUserWithSpecifiedAdminJwtToken(
+      "",
+      "isaac.newton.password",
+      adminJwtToken
+    );
   });
 }
 
 export function signupWithBlankUsername() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/signup`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "   ",
-        password: "isaac.newton.password",
-      },
-      failOnStatusCode: false,
-    });
+    return signupUserWithSpecifiedAdminJwtToken(
+      "   ",
+      "isaac.newton.password",
+      adminJwtToken
+    );
   });
 }
 
@@ -159,36 +146,22 @@ export function signupWithMissingPassword() {
 export function signupWithEmptyPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/signup`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        password: "",
-      },
-      failOnStatusCode: false,
-    });
+    return signupUserWithSpecifiedAdminJwtToken(
+      "isaac.newton",
+      "",
+      adminJwtToken
+    );
   });
 }
 
 export function signupWithBlankPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/signup`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        password: "   ",
-      },
-      failOnStatusCode: false,
-    });
+    return signupUserWithSpecifiedAdminJwtToken(
+      "isaac.newton",
+      "   ",
+      adminJwtToken
+    );
   });
 }
 

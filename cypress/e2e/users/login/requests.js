@@ -101,36 +101,22 @@ export function loginWithMissingUsername() {
 export function loginWithEmptyUsername() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/login`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "",
-        password: "isaac.newton.password",
-      },
-      failOnStatusCode: false,
-    });
+    return loginWithSpecifiedAdminJwtToken(
+      "",
+      "isaac.newton.password",
+      adminJwtToken
+    );
   });
 }
 
 export function loginWithBlankUsername() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/login`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "   ",
-        password: "isaac.newton.password",
-      },
-      failOnStatusCode: false,
-    });
+    return loginWithSpecifiedAdminJwtToken(
+      "   ",
+      "isaac.newton.password",
+      adminJwtToken
+    );
   });
 }
 
@@ -154,36 +140,18 @@ export function loginWithMissingPassword() {
 export function loginWithEmptyPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/login`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        password: "",
-      },
-      failOnStatusCode: false,
-    });
+    return loginWithSpecifiedAdminJwtToken("isaac.newton", "", adminJwtToken);
   });
 }
 
 export function loginWithBlankPassword() {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${USERS_BASE_URL}/login`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        password: "   ",
-      },
-      failOnStatusCode: false,
-    });
+    return loginWithSpecifiedAdminJwtToken(
+      "isaac.newton",
+      "   ",
+      adminJwtToken
+    );
   });
 }
 

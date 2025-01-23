@@ -63,14 +63,10 @@ export function deleteSpecificUserWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "DELETE",
-        url: `${USERS_BASE_URL}/specific/${USERS.JOE_BLOW.username}`,
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
-        },
-        failOnStatusCode: false,
-      });
+      return deleteSpecificUserWithSpecifiedAdminJwtToken(
+        USERS.JOE_BLOW.username,
+        nonAdminJwtToken
+      );
     }
   );
 }
