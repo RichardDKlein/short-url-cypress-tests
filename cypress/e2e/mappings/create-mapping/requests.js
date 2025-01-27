@@ -1,7 +1,11 @@
 /// <reference types="cypress" />
 
-import { MAPPINGS, USERS } from "../../common/constants";
-import { MAPPINGS_BASE_URL } from "../../common/constants";
+import { MAPPINGS, USERS, MAPPINGS_BASE_URL } from "../../common/constants";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
 import { signupAllUsers } from "../../users/signup/requests";
 import { deleteAllUsers } from "../../users/delete-all-users/requests";
 import { getAdminJwtToken } from "../../users/get-admin-jwt-token/requests";
@@ -38,18 +42,41 @@ export function createMappingWithWrongKindOfAuthHeader() {
 }
 
 export function createMappingWithInvalidJwtToken() {
-  return cy.request({
-    method: "POST",
-    url: `${MAPPINGS_BASE_URL}/create-mapping`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    body: {
+  return createMappingWithSpecifiedAdminJwtToken(
+    {
       username: "isaac.newton",
       shortUrl: "shorturl",
       longUrl: "https://www.longurl.com",
     },
-    failOnStatusCode: false,
+    "invalid.jwt.token"
+  );
+}
+
+export function createMappingWithValidButExpiredJwtToken() {
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return createMappingWithSpecifiedAdminJwtToken(
+            {
+              username: "isaac.newton",
+              shortUrl: "shorturl",
+              longUrl: "https://www.longurl.com",
+            },
+            adminJwtToken
+          ).then((response) => {
+            return setJwtMinutesToLiveTest(
+              ssmClient,
+              saveJwtTimeToLiveTest
+            ).then(() => {
+              return response;
+            });
+          });
+        });
+      });
+    });
   });
 }
 
@@ -97,40 +124,18 @@ export function createMappingWithMissingUsername() {
 }
 
 export function createMappingWithEmptyUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${MAPPINGS_BASE_URL}/create-mapping`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "",
-        shortUrl: "shorturl",
-        longUrl: "https://www.longurl.com",
-      },
-      failOnStatusCode: false,
-    });
+  return createMapping({
+    username: "",
+    shortUrl: "shorturl",
+    longUrl: "https://www.longurl.com",
   });
 }
 
 export function createMappingWithBlankUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${MAPPINGS_BASE_URL}/create-mapping`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "   ",
-        shortUrl: "shorturl",
-        longUrl: "https://www.longurl.com",
-      },
-      failOnStatusCode: false,
-    });
+  return createMapping({
+    username: "   ",
+    shortUrl: "shorturl",
+    longUrl: "https://www.longurl.com",
   });
 }
 
@@ -153,40 +158,18 @@ export function createMappingWithMissingShortUrl() {
 }
 
 export function createMappingWithEmptyShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${MAPPINGS_BASE_URL}/create-mapping`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        shortUrl: "",
-        longUrl: "https://www.longurl.com",
-      },
-      failOnStatusCode: false,
-    });
+  return createMapping({
+    username: "isaac.newton",
+    shortUrl: "",
+    longUrl: "https://www.longurl.com",
   });
 }
 
 export function createMappingWithBlankShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${MAPPINGS_BASE_URL}/create-mapping`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        shortUrl: "   ",
-        longUrl: "https://www.longurl.com",
-      },
-      failOnStatusCode: false,
-    });
+  return createMapping({
+    username: "isaac.newton",
+    shortUrl: "   ",
+    longUrl: "https://www.longurl.com",
   });
 }
 
@@ -209,40 +192,18 @@ export function createMappingWithMissingLongUrl() {
 }
 
 export function createMappingWithEmptyLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${MAPPINGS_BASE_URL}/create-mapping`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        shortUrl: "shorturl",
-        longUrl: "",
-      },
-      failOnStatusCode: false,
-    });
+  return createMapping({
+    username: "isaac.newton",
+    shortUrl: "shorturl",
+    longUrl: "",
   });
 }
 
 export function createMappingWithBlankLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "POST",
-      url: `${MAPPINGS_BASE_URL}/create-mapping`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "isaac.newton",
-        shortUrl: "shorturl",
-        longUrl: "   ",
-      },
-      failOnStatusCode: false,
-    });
+  return createMapping({
+    username: "isaac.newton",
+    shortUrl: "shorturl",
+    longUrl: "   ",
   });
 }
 
@@ -285,6 +246,21 @@ export function createMapping(mapping) {
       body: mapping,
       failOnStatusCode: false,
     });
+  });
+}
+
+export function createMappingWithSpecifiedAdminJwtToken(
+  mapping,
+  adminJwtToken
+) {
+  return cy.request({
+    method: "POST",
+    url: `${MAPPINGS_BASE_URL}/create-mapping`,
+    headers: {
+      Authorization: "Bearer " + adminJwtToken,
+    },
+    body: mapping,
+    failOnStatusCode: false,
   });
 }
 

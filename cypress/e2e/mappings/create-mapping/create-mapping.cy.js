@@ -4,6 +4,7 @@ import {
   createMappingWithNoAuthHeader,
   createMappingWithWrongKindOfAuthHeader,
   createMappingWithInvalidJwtToken,
+  createMappingWithValidButExpiredJwtToken,
   createMappingWithValidButNonAdminJwtToken,
   createAllMappings,
   createMappingWithMissingUsername,
@@ -20,8 +21,9 @@ import {
 } from "./requests";
 import { deleteAllMappings } from "../delete-mappings/requests";
 import {
-  expectMissingBearerTokenAuthHeaderResponse,
+  expectExpiredJwtExceptionResponse,
   expectInvalidJwtExceptionResponse,
+  expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -54,6 +56,12 @@ describe("Test the `POST /short-url/mappings/create-mapping` REST endpoint", () 
   it("has an invalid JWT token", () => {
     createMappingWithInvalidJwtToken().then((response) => {
       expectInvalidJwtExceptionResponse(response);
+    });
+  });
+
+  it("has a valid but expired JWT token", () => {
+    createMappingWithValidButExpiredJwtToken().then((response) => {
+      expectExpiredJwtExceptionResponse(response);
     });
   });
 
