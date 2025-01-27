@@ -4,6 +4,7 @@ import {
   changeLongUrlWithNoAuthHeader,
   changeLongUrlWithWrongKindOfAuthHeader,
   changeLongUrlWithInvalidJwtToken,
+  changeLongUrlWithValidButExpiredJwtToken,
   changeLongUrlWithValidButNonAdminJwtToken,
   changeLongUrlWithMissingShortUrl,
   changeLongUrlWithEmptyShortUrl,
@@ -17,8 +18,9 @@ import {
 import { createAllMappings } from "../create-mapping/requests";
 import { deleteAllMappings } from "../delete-mappings/requests";
 import {
-  expectMissingBearerTokenAuthHeaderResponse,
   expectInvalidJwtExceptionResponse,
+  expectExpiredJwtExceptionResponse,
+  expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
 } from "../../common/security";
 import {
@@ -50,6 +52,12 @@ describe("Test the `PATCH /short-url/mappings/change-long-url` REST endpoint", (
   it("has an invalid JWT token", () => {
     changeLongUrlWithInvalidJwtToken().then((response) => {
       expectInvalidJwtExceptionResponse(response);
+    });
+  });
+
+  it("has a valid but expired JWT token", () => {
+    changeLongUrlWithValidButExpiredJwtToken().then((response) => {
+      expectExpiredJwtExceptionResponse(response);
     });
   });
 

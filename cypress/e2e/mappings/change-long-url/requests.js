@@ -1,6 +1,11 @@
 /// <reference types="cypress" />
 
 import { MAPPINGS_BASE_URL, USERS } from "../../common/constants";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
 import { getAdminJwtToken } from "../../users/get-admin-jwt-token/requests";
 import { login } from "../../users/login/requests";
 
@@ -32,17 +37,35 @@ export function changeLongUrlWithWrongKindOfAuthHeader() {
 }
 
 export function changeLongUrlWithInvalidJwtToken() {
-  return cy.request({
-    method: "PATCH",
-    url: `${MAPPINGS_BASE_URL}/change-long-url`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    body: {
-      shortUrl: "youtube2",
-      longUrl: "https://www.reddit.com",
-    },
-    failOnStatusCode: false,
+  return changeLongUrlWithSpecifiedAdminJwtToken(
+    "youtube2",
+    "https://www.reddit.com",
+    "invalid.jwt.token"
+  );
+}
+
+export function changeLongUrlWithValidButExpiredJwtToken() {
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return changeLongUrlWithSpecifiedAdminJwtToken(
+            "youtube2",
+            "https://www.reddit.com",
+            adminJwtToken
+          ).then((response) => {
+            return setJwtMinutesToLiveTest(
+              ssmClient,
+              saveJwtTimeToLiveTest
+            ).then(() => {
+              return response;
+            });
+          });
+        });
+      });
+    });
   });
 }
 
@@ -50,18 +73,11 @@ export function changeLongUrlWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      cy.request({
-        method: "PATCH",
-        url: `${MAPPINGS_BASE_URL}/change-long-url`,
-        headers: {
-          Authorization: `Bearer ${nonAdminJwtToken}`,
-        },
-        body: {
-          shortUrl: "youtube2",
-          longUrl: "https://www.reddit.com",
-        },
-        failOnStatusCode: false,
-      });
+      return changeLongUrlWithSpecifiedAdminJwtToken(
+        "youtube2",
+        "https://www.reddit.com",
+        nonAdminJwtToken
+      );
     }
   );
 }
@@ -84,39 +100,11 @@ export function changeLongUrlWithMissingShortUrl() {
 }
 
 export function changeLongUrlWithEmptyShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${MAPPINGS_BASE_URL}/change-long-url`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        shortUrl: "",
-        longUrl: "https://www.reddit.com",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return changeLongUrl("", "https://www.reddit.com");
 }
 
 export function changeLongUrlWithBlankShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${MAPPINGS_BASE_URL}/change-long-url`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        shortUrl: "   ",
-        longUrl: "https://www.reddit.com",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return changeLongUrl("   ", "https://www.reddit.com");
 }
 
 export function changeLongUrlWithMissingLongUrl() {
@@ -137,39 +125,11 @@ export function changeLongUrlWithMissingLongUrl() {
 }
 
 export function changeLongUrlWithEmptyLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${MAPPINGS_BASE_URL}/change-long-url`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        shortUrl: "youtube2",
-        longUrl: "",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return changeLongUrl("youtube2", "");
 }
 
 export function changeLongUrlWithBlankLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "PATCH",
-      url: `${MAPPINGS_BASE_URL}/change-long-url`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        shortUrl: "youtube2",
-        longUrl: "   ",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return changeLongUrl("youtube2", "   ");
 }
 
 export function changeLongUrlOfUnmappedShortUrl() {
@@ -183,14 +143,26 @@ export function changeLongUrlOfMappedShortUrl() {
 export function changeLongUrl(shortUrl, longUrl) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    return cy.request({
-      method: "PATCH",
-      url: `${MAPPINGS_BASE_URL}/change-long-url`,
-      headers: {
-        Authorization: "Bearer " + adminJwtToken,
-      },
-      body: { shortUrl, longUrl },
-      failOnStatusCode: false,
-    });
+    return changeLongUrlWithSpecifiedAdminJwtToken(
+      shortUrl,
+      longUrl,
+      adminJwtToken
+    );
+  });
+}
+
+export function changeLongUrlWithSpecifiedAdminJwtToken(
+  shortUrl,
+  longUrl,
+  adminJwtToken
+) {
+  return cy.request({
+    method: "PATCH",
+    url: `${MAPPINGS_BASE_URL}/change-long-url`,
+    headers: {
+      Authorization: "Bearer " + adminJwtToken,
+    },
+    body: { shortUrl, longUrl },
+    failOnStatusCode: false,
   });
 }
