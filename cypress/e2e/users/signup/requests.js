@@ -9,7 +9,6 @@ import {
 import { getAdminJwtToken } from "../get-admin-jwt-token/requests";
 import { getAllUsers } from "../get-all-users/requests";
 import { login } from "../login/requests";
-import { sign } from "jsonwebtoken";
 
 export function signupWithNoAuthHeader() {
   return cy.request({
@@ -105,23 +104,11 @@ export function signupWithMissingUsername() {
 }
 
 export function signupWithEmptyUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return signupUserWithSpecifiedAdminJwtToken(
-      { username: "", password: "isaac.newton.password" },
-      adminJwtToken
-    );
-  });
+  return signupUser({ username: "", password: "isaac.newton.password" });
 }
 
 export function signupWithBlankUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return signupUserWithSpecifiedAdminJwtToken(
-      { username: "   ", password: "isaac.newton.password" },
-      adminJwtToken
-    );
-  });
+  return signupUser({ username: "   ", password: "isaac.newton.password" });
 }
 
 export function signupWithMissingPassword() {
@@ -142,23 +129,11 @@ export function signupWithMissingPassword() {
 }
 
 export function signupWithEmptyPassword() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return signupUserWithSpecifiedAdminJwtToken(
-      { username: "isaac.newton", password: "" },
-      adminJwtToken
-    );
-  });
+  return signupUser({ username: "isaac.newton", password: "" });
 }
 
 export function signupWithBlankPassword() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return signupUserWithSpecifiedAdminJwtToken(
-      { username: "isaac.newton", password: "   " },
-      adminJwtToken
-    );
-  });
+  return signupUser({ username: "isaac.newton", password: "   " });
 }
 
 export function signupAnExistingUser() {

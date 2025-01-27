@@ -99,25 +99,11 @@ export function loginWithMissingUsername() {
 }
 
 export function loginWithEmptyUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return loginWithSpecifiedAdminJwtToken(
-      "",
-      "isaac.newton.password",
-      adminJwtToken
-    );
-  });
+  return login("", "isaac.newton.password");
 }
 
 export function loginWithBlankUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return loginWithSpecifiedAdminJwtToken(
-      "   ",
-      "isaac.newton.password",
-      adminJwtToken
-    );
-  });
+  return login("   ", "isaac.newton.password");
 }
 
 export function loginWithMissingPassword() {
@@ -138,21 +124,11 @@ export function loginWithMissingPassword() {
 }
 
 export function loginWithEmptyPassword() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return loginWithSpecifiedAdminJwtToken("isaac.newton", "", adminJwtToken);
-  });
+  return login("isaac.newton", "");
 }
 
 export function loginWithBlankPassword() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return loginWithSpecifiedAdminJwtToken(
-      "isaac.newton",
-      "   ",
-      adminJwtToken
-    );
-  });
+  return login("isaac.newton", "   ");
 }
 
 export function loginWithWrongPassword() {

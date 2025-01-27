@@ -106,27 +106,19 @@ export function changePasswordWithMissingUsername() {
 }
 
 export function changePasswordWithEmptyUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return changePasswordWithSpecifiedAdminJwtToken(
-      "",
-      "isaac.newton.old.password",
-      "isaac.newton.new.password",
-      adminJwtToken
-    );
-  });
+  return changePassword(
+    "",
+    "isaac.newton.old.password",
+    "isaac.newton.new.password"
+  );
 }
 
 export function changePasswordWithBlankUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return changePasswordWithSpecifiedAdminJwtToken(
-      "   ",
-      "isaac.newton.old.password",
-      "isaac.newton.new.password",
-      adminJwtToken
-    );
-  });
+  return changePassword(
+    "   ",
+    "isaac.newton.old.password",
+    "isaac.newton.new.password"
+  );
 }
 
 export function changePasswordWithMissingOldPassword() {
@@ -148,27 +140,11 @@ export function changePasswordWithMissingOldPassword() {
 }
 
 export function changePasswordWithEmptyOldPassword() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return changePasswordWithSpecifiedAdminJwtToken(
-      "isaac.newton",
-      "",
-      "isaac.newton.new.password",
-      adminJwtToken
-    );
-  });
+  return changePassword("isaac.newton", "", "isaac.newton.new.password");
 }
 
 export function changePasswordWithBlankOldPassword() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return changePasswordWithSpecifiedAdminJwtToken(
-      "isaac.newton",
-      "   ",
-      "isaac.newton.new.password",
-      adminJwtToken
-    );
-  });
+  return changePassword("isaac.newton", "   ", "isaac.newton.new.password");
 }
 
 export function changePasswordWithMissingNewPassword() {
@@ -190,27 +166,11 @@ export function changePasswordWithMissingNewPassword() {
 }
 
 export function changePasswordWithEmptyNewPassword() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return changePasswordWithSpecifiedAdminJwtToken(
-      "isaac.newton",
-      "isaac.newton.old.password",
-      "",
-      adminJwtToken
-    );
-  });
+  return changePassword("isaac.newton", "isaac.newton.old.password", "");
 }
 
 export function changePasswordWithBlankNewPassword() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    return changePasswordWithSpecifiedAdminJwtToken(
-      "isaac.newton",
-      "isaac.newton.old.password",
-      "   ",
-      adminJwtToken
-    );
-  });
+  return changePassword("isaac.newton", "isaac.newton.old.password", "   ");
 }
 
 export function changePasswordOfNonExistentUser() {
