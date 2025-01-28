@@ -4,6 +4,7 @@ import {
   deleteMappingsWithNoAuthHeader,
   deleteMappingsWithWrongKindOfAuthHeader,
   deleteMappingsWithInvalidJwtToken,
+  deleteMappingsWithValidButExpiredJwtToken,
   deleteMappingsWithValidButNonAdminJwtToken,
   deleteMappingsWithMissingUsername,
   deleteMappingsWithEmptyUsername,
@@ -23,6 +24,7 @@ import {
 import { createAllMappings } from "../create-mapping/requests";
 import { deleteAllMappings } from "./requests";
 import {
+  expectExpiredJwtExceptionResponse,
   expectInvalidJwtExceptionResponse,
   expectMissingBearerTokenAuthHeaderResponse,
   expectMustBeAdminResponse,
@@ -60,6 +62,12 @@ describe("Test the `DELETE /short-url/mappings/delete-mappings` REST endpoint", 
   it("has an invalid JWT token", () => {
     deleteMappingsWithInvalidJwtToken().then((response) => {
       expectInvalidJwtExceptionResponse(response);
+    });
+  });
+
+  it("has a valid but expired JWT token", () => {
+    deleteMappingsWithValidButExpiredJwtToken().then((response) => {
+      expectExpiredJwtExceptionResponse(response);
     });
   });
 

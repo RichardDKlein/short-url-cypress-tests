@@ -34,55 +34,25 @@ export function deleteMappingsWithWrongKindOfAuthHeader() {
 }
 
 export function deleteMappingsWithInvalidJwtToken() {
-  return cy.request({
-    method: "DELETE",
-    url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    body: {
-      username: "*",
-      shortUrl: "*",
-      longUrl: "*",
-    },
-    failOnStatusCode: false,
-  });
+  return deleteMappingsWithSpecifiedAdminJwtToken(
+    "*",
+    "*",
+    "*",
+    "invalid.jwt.token"
+  );
 }
 
 export function deleteMappingsWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      deleteAllMappingsWithSpecifiedAdminJwtToken(nonAdminJwtToken);
+      deleteMappingsWithSpecifiedAdminJwtToken("*", "*", "*", nonAdminJwtToken);
     }
   );
 }
 
-export function deleteAllMappingsWithValidAdminJwtToken() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    deleteAllMappingsWithSpecifiedAdminJwtToken(adminJwtToken);
-  });
-}
-
-export function deleteAllMappingsWithSpecifiedAdminJwtToken(adminJwtToken) {
-  return cy.request({
-    method: "DELETE",
-    url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-    headers: {
-      Authorization: `Bearer ${adminJwtToken}`,
-    },
-    body: {
-      username: "*",
-      shortUrl: "*",
-      longUrl: "*",
-    },
-    failOnStatusCode: false,
-  });
-}
-
 export function deleteAllMappings() {
-  return deleteAllMappingsWithValidAdminJwtToken();
+  return deleteMappings("*", "*", "*");
 }
 
 export function deleteMappingsWithMissingUsername() {
@@ -104,41 +74,11 @@ export function deleteMappingsWithMissingUsername() {
 }
 
 export function deleteMappingsWithEmptyUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "",
-        shortUrl: "*",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("", "*", "*");
 }
 
 export function deleteMappingsWithBlankUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "   ",
-        shortUrl: "*",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("   ", "*", "*");
 }
 
 export function deleteMappingsWithMissingShortUrl() {
@@ -160,41 +100,11 @@ export function deleteMappingsWithMissingShortUrl() {
 }
 
 export function deleteMappingsWithEmptyShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("*", "", "*");
 }
 
 export function deleteMappingsWithBlankShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "   ",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("*", "   ", "*");
 }
 
 export function deleteMappingsWithMissingLongUrl() {
@@ -216,134 +126,58 @@ export function deleteMappingsWithMissingLongUrl() {
 }
 
 export function deleteMappingsWithEmptyLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "*",
-        longUrl: "",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("*", "*", "");
 }
 
 export function deleteMappingsWithBlankLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "*",
-        longUrl: "   ",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("*", "*", "   ");
 }
 
 export function deleteMappingsWithWildcardUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "google1",
-        longUrl: "https://www.google.com",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("*", "google1", "https://www.google.com");
 }
 
 export function deleteMappingsWithWildcardShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "youtube",
-        shortUrl: "*",
-        longUrl: "https://www.youtube.com",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("youtube", "*", "https://www.youtube.com");
 }
 
 export function deleteMappingsWithWildcardLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "facebook",
-        shortUrl: "facebook2",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("facebook", "facebook2", "*");
 }
 
 export function deleteMappingsWithAllWildcards() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "*",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return deleteMappings("*", "*", "*");
 }
 
 export function deleteMappingsWithoutWildcards() {
+  return deleteMappings("youtube", "youtube1", "https://www.youtube.com");
+}
+
+export function deleteMappings(username, shortUrl, longUrl) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "DELETE",
-      url: `${MAPPINGS_BASE_URL}/delete-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "youtube",
-        shortUrl: "youtube2",
-        longUrl: "https://www.youtube.com",
-      },
-      failOnStatusCode: false,
-    });
+    return deleteMappingsWithSpecifiedAdminJwtToken(
+      username,
+      shortUrl,
+      longUrl,
+      adminJwtToken
+    );
+  });
+}
+
+export function deleteMappingsWithSpecifiedAdminJwtToken(
+  username,
+  shortUrl,
+  longUrl,
+  adminJwtToken
+) {
+  return cy.request({
+    method: "DELETE",
+    url: `${MAPPINGS_BASE_URL}/delete-mappings`,
+    headers: {
+      Authorization: `Bearer ${adminJwtToken}`,
+    },
+    body: { username: username, shortUrl: shortUrl, longUrl: longUrl },
+    failOnStatusCode: false,
   });
 }
