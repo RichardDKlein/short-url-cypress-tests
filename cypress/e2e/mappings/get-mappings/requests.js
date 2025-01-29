@@ -1,6 +1,11 @@
 /// <reference types="cypress" />
 
 import { MAPPINGS_BASE_URL, USERS } from "../../common/constants";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
 import { login } from "../../users/login/requests";
 import { getAdminJwtToken } from "../../users/get-admin-jwt-token/requests";
 
@@ -34,18 +39,37 @@ export function getMappingsWithWrongKindOfAuthHeader() {
 }
 
 export function getMappingsWithInvalidJwtToken() {
-  return cy.request({
-    method: "GET",
-    url: `${MAPPINGS_BASE_URL}/get-mappings`,
-    headers: {
-      Authorization: "Bearer " + "invalid.jwt.token",
-    },
-    body: {
-      username: "*",
-      shortUrl: "*",
-      longUrl: "*",
-    },
-    failOnStatusCode: false,
+  return getMappingsWithSpecifiedAdminJwtToken(
+    "*",
+    "*",
+    "*",
+    "invalid.jwt.token"
+  );
+}
+
+export function getMappingsWithValidButExpiredJwtToken() {
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return getMappingsWithSpecifiedAdminJwtToken(
+            "*",
+            "*",
+            "*",
+            adminJwtToken
+          ).then((response) => {
+            return setJwtMinutesToLiveTest(
+              ssmClient,
+              saveJwtTimeToLiveTest
+            ).then(() => {
+              return response;
+            });
+          });
+        });
+      });
+    });
   });
 }
 
@@ -53,36 +77,18 @@ export function getMappingsWithValidButNonAdminJwtToken() {
   return login(USERS.JOHN_DOE.username, USERS.JOHN_DOE.password).then(
     (response) => {
       const nonAdminJwtToken = response.body.jwtToken;
-      getAllMappingsWithSpecifiedAdminJwtToken(nonAdminJwtToken);
+      return getMappingsWithSpecifiedAdminJwtToken(
+        "*",
+        "*",
+        "*",
+        nonAdminJwtToken
+      );
     }
   );
 }
 
-export function getAllMappingsWithValidAdminJwtToken() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    getAllMappingsWithSpecifiedAdminJwtToken(adminJwtToken);
-  });
-}
-
-export function getAllMappingsWithSpecifiedAdminJwtToken(adminJwtToken) {
-  return cy.request({
-    method: "GET",
-    url: `${MAPPINGS_BASE_URL}/get-mappings`,
-    headers: {
-      Authorization: `Bearer ${adminJwtToken}`,
-    },
-    body: {
-      username: "*",
-      shortUrl: "*",
-      longUrl: "*",
-    },
-    failOnStatusCode: false,
-  });
-}
-
 export function getAllMappings() {
-  return getAllMappingsWithValidAdminJwtToken();
+  return getMappings("*", "*", "*");
 }
 
 export function getMappingsWithMissingUsername() {
@@ -104,41 +110,11 @@ export function getMappingsWithMissingUsername() {
 }
 
 export function getMappingsWithEmptyUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "",
-        shortUrl: "*",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("", "*", "*");
 }
 
 export function getMappingsWithBlankUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "   ",
-        shortUrl: "*",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("   ", "*", "*");
 }
 
 export function getMappingsWithMissingShortUrl() {
@@ -160,41 +136,11 @@ export function getMappingsWithMissingShortUrl() {
 }
 
 export function getMappingsWithEmptyShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("*", "", "*");
 }
 
 export function getMappingsWithBlankShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "   ",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("*", "   ", "*");
 }
 
 export function getMappingsWithMissingLongUrl() {
@@ -216,134 +162,58 @@ export function getMappingsWithMissingLongUrl() {
 }
 
 export function getMappingsWithEmptyLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "*",
-        longUrl: "",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("*", "*", "");
 }
 
 export function getMappingsWithBlankLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "*",
-        longUrl: "   ",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("*", "*", "   ");
 }
 
 export function getMappingsWithWildcardUsername() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "google1",
-        longUrl: "https://www.google.com",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("*", "google1", "https://www.google.com");
 }
 
 export function getMappingsWithWildcardShortUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "youtube",
-        shortUrl: "*",
-        longUrl: "https://www.youtube.com",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("youtube", "*", "https://www.youtube.com");
 }
 
 export function getMappingsWithWildcardLongUrl() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "facebook",
-        shortUrl: "facebook2",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("facebook", "facebook2", "*");
 }
 
 export function getMappingsWithAllWildcards() {
-  return getAdminJwtToken().then((response) => {
-    const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "*",
-        shortUrl: "*",
-        longUrl: "*",
-      },
-      failOnStatusCode: false,
-    });
-  });
+  return getMappings("*", "*", "*");
 }
 
 export function getMappingsWithoutWildcards() {
+  return getMappings("youtube", "youtube2", "https://www.youtube.com");
+}
+
+export function getMappings(username, shortUrl, longUrl) {
   return getAdminJwtToken().then((response) => {
     const adminJwtToken = response.body.jwtToken;
-    cy.request({
-      method: "GET",
-      url: `${MAPPINGS_BASE_URL}/get-mappings`,
-      headers: {
-        Authorization: `Bearer ${adminJwtToken}`,
-      },
-      body: {
-        username: "youtube",
-        shortUrl: "youtube2",
-        longUrl: "https://www.youtube.com",
-      },
-      failOnStatusCode: false,
-    });
+    return getMappingsWithSpecifiedAdminJwtToken(
+      username,
+      shortUrl,
+      longUrl,
+      adminJwtToken
+    );
+  });
+}
+
+export function getMappingsWithSpecifiedAdminJwtToken(
+  username,
+  shortUrl,
+  longUrl,
+  adminJwtToken
+) {
+  return cy.request({
+    method: "GET",
+    url: `${MAPPINGS_BASE_URL}/get-mappings`,
+    headers: {
+      Authorization: `Bearer ${adminJwtToken}`,
+    },
+    body: { username, shortUrl, longUrl },
+    failOnStatusCode: false,
   });
 }
