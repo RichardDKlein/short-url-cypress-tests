@@ -1,6 +1,11 @@
 /// <reference types="cypress" />
 
 import { MAPPINGS_BASE_URL, USERS } from "../../common/constants";
+import {
+  createSsmClient,
+  getJwtMinutesToLiveTest,
+  setJwtMinutesToLiveTest,
+} from "../../common/aws";
 import { login } from "../../users/login/requests";
 import { getAdminJwtToken } from "../../users/get-admin-jwt-token/requests";
 
@@ -40,6 +45,32 @@ export function deleteMappingsWithInvalidJwtToken() {
     "*",
     "invalid.jwt.token"
   );
+}
+
+export function deleteMappingsWithValidButExpiredJwtToken() {
+  return createSsmClient(Cypress.env("region")).then((ssmClient) => {
+    return getJwtMinutesToLiveTest(ssmClient).then((jwtMinutesToLiveTest) => {
+      const saveJwtTimeToLiveTest = jwtMinutesToLiveTest;
+      return setJwtMinutesToLiveTest(ssmClient, 0).then(() => {
+        return getAdminJwtToken().then((response) => {
+          const adminJwtToken = response.body.jwtToken;
+          return deleteMappingsWithSpecifiedAdminJwtToken(
+            USERS.JOE_BLOW.username,
+            "*",
+            "*",
+            adminJwtToken
+          ).then((response) => {
+            return setJwtMinutesToLiveTest(
+              ssmClient,
+              saveJwtTimeToLiveTest
+            ).then(() => {
+              return response;
+            });
+          });
+        });
+      });
+    });
+  });
 }
 
 export function deleteMappingsWithValidButNonAdminJwtToken() {
